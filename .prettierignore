@@ -1,0 +1,5 @@
+/dist
+/coverage
+/test/jest.config.js
+/src/migrations/.snapshot-saude-bi.json
+README.md
