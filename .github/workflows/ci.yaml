@@ -22,7 +22,7 @@ jobs:
       - uses: ./.github/actions/cached-install
       - run: yarn prettier
   test:
-    name: Build and Test
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
