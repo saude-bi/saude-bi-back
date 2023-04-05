@@ -1,13 +1,13 @@
-import { CacheModule, Module } from '@nestjs/common'
+import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
-import { MikroOrmModule } from '@mikro-orm/nestjs'
 import { LoggerModule } from 'nestjs-pino'
 import Joi from 'joi'
 import { redisStore } from 'cache-manager-redis-store'
 import { ScheduleModule } from '@nestjs/schedule'
 import { AppController } from './app.controller'
 import { TerminusModule } from '@nestjs/terminus'
-import { CacheStore } from '@nestjs/cache-manager'
+import { CacheModule, CacheStore } from '@nestjs/cache-manager'
+import { DashboardModule } from '@modules/dashboard/dashboard.module'
 
 @Module({
   controllers: [AppController],
@@ -15,7 +15,7 @@ import { CacheStore } from '@nestjs/cache-manager'
   imports: [
     TerminusModule,
     ScheduleModule.forRoot(),
-    MikroOrmModule.forRoot(),
+    DashboardModule,
     LoggerModule.forRoot({
       pinoHttp: {
         transport: {
@@ -43,7 +43,7 @@ import { CacheStore } from '@nestjs/cache-manager'
     }),
     CacheModule.registerAsync({
       useFactory: async () => ({
-        store: (await redisStore({ url: 'redis://redis:6379' })) as unknown as CacheStore
+        store: (await redisStore({ url: 'redis://redis:6379', ttl: 5 })) as unknown as CacheStore
       }),
       isGlobal: true
     })
