@@ -1,0 +1,4 @@
+#!/bin/sh
+
+yarn hooks:install
+exit 0
