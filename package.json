@@ -20,10 +20,9 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.config.js --passWithNoTests",
-    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli",
-    "migration:initial": "npm run typeorm migration:create",
-    "migration:create": "npm run typeorm migration:generate -- --dataSource ./src/configs/data-source.ts -o -p",
-    "migration:run": "npm run typeorm migration:run -- --dataSource ./src/configs/data-source.ts"
+    "migrate": "npx mikro-orm migration:create",
+    "migrate:initial": "npx mikro-orm migration:create --initial",
+    "migrate:up": "npx mikro-orm migration:up"
   },
   "dependencies": {
     "@mikro-orm/cli": "^5.4.2",
