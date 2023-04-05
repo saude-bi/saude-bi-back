@@ -1,0 +1,21 @@
+#!/bin/sh
+
+yarn prettier
+if [ $? -ne 0 ]; then
+  echo "Prettier check failed. Run yarn format to fix prettier issues before committing."
+  exit 1
+fi
+
+yarn lint
+if [ $? -ne 0 ]; then
+  echo "Linter failed. Address linting issues before committing."
+  exit 1
+fi
+
+yarn test
+if [ $? -ne 0 ]; then
+  echo "Tests failed. Please fix failing tests before committing."
+  exit 1
+fi
+
+exit 0
