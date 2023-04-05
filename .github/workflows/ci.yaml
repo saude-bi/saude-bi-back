@@ -27,4 +27,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/cached-install
-      - run: yarn test --passWithNoTests
+      - run: yarn test
+  test-e2e:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/cached-install
+      - run: yarn test:e2e
