@@ -1,11 +1,13 @@
-import { Module } from '@nestjs/common'
+import { CacheModule, Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { MikroOrmModule } from '@mikro-orm/nestjs'
 import { LoggerModule } from 'nestjs-pino'
 import Joi from 'joi'
+import { redisStore } from 'cache-manager-redis-store'
 import { ScheduleModule } from '@nestjs/schedule'
 import { AppController } from './app.controller'
 import { TerminusModule } from '@nestjs/terminus'
+import { CacheStore } from '@nestjs/cache-manager'
 
 @Module({
   controllers: [AppController],
@@ -38,6 +40,12 @@ import { TerminusModule } from '@nestjs/terminus'
         HOST: Joi.string().required(),
         MODE: Joi.string().required()
       })
+    }),
+    CacheModule.registerAsync({
+      useFactory: async () => ({
+        store: (await redisStore({ url: 'redis://redis:6379' })) as unknown as CacheStore
+      }),
+      isGlobal: true
     })
   ]
 })
