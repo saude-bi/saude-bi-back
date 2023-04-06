@@ -8,13 +8,19 @@ import { AppController } from './app.controller'
 import { TerminusModule } from '@nestjs/terminus'
 import { CacheModule, CacheStore } from '@nestjs/cache-manager'
 import { DashboardModule } from '@modules/dashboard/dashboard.module'
+import { HttpModule } from '@nestjs/axios'
+import { IdentityModule } from '@modules/identity/identity.module'
+import { MikroOrmModule } from '@mikro-orm/nestjs'
 
 @Module({
   controllers: [AppController],
   providers: [],
   imports: [
+    HttpModule,
     TerminusModule,
     ScheduleModule.forRoot(),
+    MikroOrmModule.forRoot(),
+    IdentityModule,
     DashboardModule,
     LoggerModule.forRoot({
       pinoHttp: {
@@ -38,7 +44,8 @@ import { DashboardModule } from '@modules/dashboard/dashboard.module'
         DB_DATABASE: Joi.string().required(),
         PORT: Joi.number().required(),
         HOST: Joi.string().required(),
-        MODE: Joi.string().required()
+        MODE: Joi.string().required(),
+        JWT_SECRET: Joi.string().required()
       })
     }),
     CacheModule.registerAsync({

@@ -1,0 +1,9 @@
+#!/bin/sh
+
+yarn test:e2e
+if [ $? -ne 0 ]; then
+  echo "Integration tests not passing, fix them before pushing to main."
+  exit 1
+fi
+
+exit 0
