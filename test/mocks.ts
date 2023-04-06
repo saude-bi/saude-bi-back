@@ -10,5 +10,6 @@ export const repositoryMockFactory: () => Mock<EntityRepository<any>> = jest.fn(
   findAll: jest.fn(),
   findAndCount: jest.fn(),
   findOne: jest.fn(),
-  persistAndFlush: jest.fn()
+  persistAndFlush: jest.fn(),
+  removeAndFlush: jest.fn()
 }))

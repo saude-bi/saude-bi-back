@@ -1,6 +1,6 @@
 /dist
 /coverage
 /test/jest.config.js
-/src/migrations/.snapshot-saude-bi.json
+/src/migrations
 /.github
 README.md
