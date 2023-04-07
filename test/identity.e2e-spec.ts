@@ -119,9 +119,12 @@ describe('Product Module (e2e)', () => {
     let hashedUserDto: CreateUserDto
     let jwt: string = 'dfsfsdafa'
 
-    beforeAll(async () => {
-      hashedUserDto = { ...createUserDto, password: await hash(createUserDto.password, 10) }
-      userRepository.findOne.mockResolvedValue(hashedUserDto)
+    beforeEach(async () => {
+      hashedUserDto = {
+        ...createUserDto,
+        password: await hash(createUserDto.password, 10)
+      }
+      userRepository.findOne.mockResolvedValue({ ...hashedUserDto, isAdmin: false })
 
       jwt = (await agent.post('/auth').send(createUserDto)).body.access_token
     })
@@ -130,11 +133,22 @@ describe('Product Module (e2e)', () => {
       await agent.get(`/users/${createUserDto.username}`).expect(HttpStatus.UNAUTHORIZED)
     })
 
-    it('should forbid trying to find another user while authenticated', async () => {
-      await agent
-        .get(`/users/anotheruser`)
-        .set('Authorization', `Bearer ${jwt}`)
-        .expect(HttpStatus.FORBIDDEN)
+    describe('GET details of another user', () => {
+      it("should allow admins to find another user's details", async () => {
+        userRepository.findOne.mockResolvedValue({ ...hashedUserDto, isAdmin: true })
+
+        await agent
+          .get(`/users/anotheruser`)
+          .set('Authorization', `Bearer ${jwt}`)
+          .expect(HttpStatus.OK)
+      })
+
+      it("should forbid users trying to find another user's details", async () => {
+        await agent
+          .get(`/users/anotheruser`)
+          .set('Authorization', `Bearer ${jwt}`)
+          .expect(HttpStatus.FORBIDDEN)
+      })
     })
 
     it('should show authenticated user', async () => {
