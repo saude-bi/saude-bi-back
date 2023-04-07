@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { HttpStatus, INestApplication } from '@nestjs/common'
 import request, { SuperAgentTest } from 'supertest'
 import { setupFixture } from './utils'
-import { getRepositoryToken, MikroOrmModule } from '@mikro-orm/nestjs'
+import { getRepositoryToken } from '@mikro-orm/nestjs'
 import { repositoryMockFactory } from './mocks'
 import { IdentityModule } from '@modules/identity/identity.module'
 import { ConfigModule } from '@nestjs/config'
@@ -19,12 +19,6 @@ describe('Product Module (e2e)', () => {
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
-        MikroOrmModule.forRoot({
-          dbName: 'testdb',
-          type: 'postgresql',
-          entities: ['dist/**/*.entity.js'],
-          entitiesTs: ['src/**/*.entity.ts']
-        }),
         IdentityModule,
         ConfigModule.forRoot({
           isGlobal: true,
@@ -51,7 +45,7 @@ describe('Product Module (e2e)', () => {
 
   afterAll(async () => {
     await app.close()
-    server.close()
+    await server.close()
   })
 
   beforeEach(() => {
