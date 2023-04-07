@@ -13,7 +13,12 @@ export class UserService {
   constructor(@InjectRepository(User) private readonly userRepository: EntityRepository<User>) {}
 
   async create(user: CreateUserDto): Promise<User> {
-    const newUser = this.userRepository.create({ ...user, password: await hash(user.password, 10) })
+    const newUser = this.userRepository.create({
+      ...user,
+      password: await hash(user.password, 10),
+      isAdmin: false
+    })
+
     await this.userRepository.persistAndFlush(newUser)
 
     return newUser
