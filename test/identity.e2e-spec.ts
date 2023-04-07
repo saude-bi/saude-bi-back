@@ -5,10 +5,10 @@ import { setupFixture } from './utils'
 import { getRepositoryToken, MikroOrmModule } from '@mikro-orm/nestjs'
 import { repositoryMockFactory } from './mocks'
 import { IdentityModule } from '@modules/identity/identity.module'
-import { User } from '@modules/identity/entities/user.entity'
-import { CreateUserDto } from '@modules/identity/dto/create-user.dto'
 import { ConfigModule } from '@nestjs/config'
 import { hash } from 'bcrypt'
+import { User } from '@modules/identity/user/entities/user.entity'
+import { CreateUserDto } from '@modules/identity/user/dto/create-user.dto'
 
 describe('Product Module (e2e)', () => {
   let app: INestApplication

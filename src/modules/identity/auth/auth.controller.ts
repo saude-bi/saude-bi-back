@@ -1,11 +1,11 @@
 import { Req, Controller, HttpCode, Post, UseGuards, HttpStatus, Get } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
+import { Jwt, RequestWithUser } from '../types'
+import { User } from '../user/entities/user.entity'
+import { AuthService } from './auth.service'
 import { AuthUser } from './decorators/auth-user.decorator'
-import { User } from './entities/user.entity'
 import { JwtAuthGuard } from './guards/jwt-auth.guard'
 import { LocalAuthGuard } from './guards/local-auth.guard'
-import { AuthService } from './services/auth.service'
-import { Jwt, RequestWithUser } from './types'
 
 @ApiTags('Identity')
 @Controller('auth')

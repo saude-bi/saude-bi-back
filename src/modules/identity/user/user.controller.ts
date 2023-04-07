@@ -11,11 +11,11 @@ import {
   UseGuards
 } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
-import { AuthUser } from './decorators/auth-user.decorator'
+import { AuthUser } from '../auth/decorators/auth-user.decorator'
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
 import { CreateUserDto } from './dto/create-user.dto'
 import { User } from './entities/user.entity'
-import { JwtAuthGuard } from './guards/jwt-auth.guard'
-import { UserService } from './services/user.service'
+import { UserService } from './user.service'
 
 @ApiTags('Identity')
 @Controller('users')
