@@ -1,5 +1,6 @@
 #!/bin/sh
 
+yarn hooks:install
 yarn test:e2e
 if [ $? -ne 0 ]; then
   echo "Integration tests not passing, fix them before pushing to main."
