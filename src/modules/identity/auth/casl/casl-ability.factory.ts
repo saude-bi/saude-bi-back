@@ -18,7 +18,6 @@ export class CaslAbilityFactory {
       PureAbility as AbilityClass<AppAbility>
     )
 
-    console.log(user)
     if (user.isAdmin) {
       can(Action.Manage, 'all')
     } else {
