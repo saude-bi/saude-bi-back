@@ -19,7 +19,12 @@ describe('Product Module (e2e)', () => {
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
-        MikroOrmModule.forRoot(),
+        MikroOrmModule.forRoot({
+          dbName: 'testdb',
+          type: 'postgresql',
+          entities: ['dist/**/*.entity.js'],
+          entitiesTs: ['src/**/*.entity.ts']
+        }),
         IdentityModule,
         ConfigModule.forRoot({
           isGlobal: true,
