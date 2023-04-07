@@ -11,6 +11,8 @@ import {
   UseGuards
 } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
+import { CheckPolicies, PoliciesGuard } from '../auth/casl/check-policies.decorator'
+import { Action } from '../auth/casl/types'
 import { AuthUser } from '../auth/decorators/auth-user.decorator'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
 import { CreateUserDto } from './dto/create-user.dto'
@@ -22,13 +24,15 @@ import { UserService } from './user.service'
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @UseGuards(JwtAuthGuard)
-  @Get(':username')
-  async findOne(@Param('username') username: string, @AuthUser() currentUser: User) {
-    if (username !== currentUser.username) {
-      throw new ForbiddenException()
-    }
+  @UseGuards(JwtAuthGuard, PoliciesGuard)
+  @CheckPolicies((ability, params: { username: string }) => {
+    const user = new User()
+    user.username = params.username
 
+    return ability.can(Action.Read, user)
+  })
+  @Get(':username')
+  async findOne(@Param('username') username: string) {
     return await this.userService.findOne(username)
   }
 
