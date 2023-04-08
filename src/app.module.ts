@@ -11,49 +11,52 @@ import { DashboardModule } from '@modules/dashboard/dashboard.module'
 import { HttpModule } from '@nestjs/axios'
 import { IdentityModule } from '@modules/identity/identity.module'
 import { MikroOrmModule } from '@mikro-orm/nestjs'
+import { EstablishmentModule } from '@modules/establishment/establishment.module'
+import { DataModule } from '@modules/data/data.module'
+
+const helperModules = [
+  HttpModule,
+  TerminusModule,
+  ScheduleModule.forRoot(),
+  MikroOrmModule.forRoot(),
+  LoggerModule.forRoot({
+    pinoHttp: {
+      transport: {
+        target: 'pino-pretty',
+        options: {
+          singleLine: true,
+          colorize: true
+        }
+      }
+    }
+  }),
+  ConfigModule.forRoot({
+    isGlobal: true,
+    cache: true,
+    // TODO convert to nested config
+    validationSchema: Joi.object({
+      DB_HOST: Joi.string().required(),
+      DB_PORT: Joi.number().required(),
+      DB_USERNAME: Joi.string().required(),
+      DB_PASSWORD: Joi.string().required(),
+      DB_DATABASE: Joi.string().required(),
+      PORT: Joi.number().required(),
+      HOST: Joi.string().required(),
+      MODE: Joi.string().required(),
+      JWT_SECRET: Joi.string().required(),
+      CNPJ_MANTENEDORA: Joi.string().required()
+    })
+  }),
+  CacheModule.registerAsync({
+    useFactory: async () => ({
+      store: (await redisStore({ url: 'redis://redis:6379', ttl: 5 })) as unknown as CacheStore
+    }),
+    isGlobal: true
+  })
+]
 
 @Module({
   controllers: [AppController],
-  providers: [],
-  imports: [
-    HttpModule,
-    TerminusModule,
-    ScheduleModule.forRoot(),
-    MikroOrmModule.forRoot(),
-    IdentityModule,
-    DashboardModule,
-    LoggerModule.forRoot({
-      pinoHttp: {
-        transport: {
-          target: 'pino-pretty',
-          options: {
-            singleLine: true,
-            colorize: true
-          }
-        }
-      }
-    }),
-    ConfigModule.forRoot({
-      isGlobal: true,
-      cache: true,
-      validationSchema: Joi.object({
-        DB_HOST: Joi.string().required(),
-        DB_PORT: Joi.number().required(),
-        DB_USERNAME: Joi.string().required(),
-        DB_PASSWORD: Joi.string().required(),
-        DB_DATABASE: Joi.string().required(),
-        PORT: Joi.number().required(),
-        HOST: Joi.string().required(),
-        MODE: Joi.string().required(),
-        JWT_SECRET: Joi.string().required()
-      })
-    }),
-    CacheModule.registerAsync({
-      useFactory: async () => ({
-        store: (await redisStore({ url: 'redis://redis:6379', ttl: 5 })) as unknown as CacheStore
-      }),
-      isGlobal: true
-    })
-  ]
+  imports: [...helperModules, IdentityModule, DashboardModule, EstablishmentModule, DataModule]
 })
 export class AppModule {}
