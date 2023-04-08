@@ -52,6 +52,15 @@
           "primary": false,
           "nullable": false,
           "mappedType": "string"
+        },
+        "is_admin": {
+          "name": "is_admin",
+          "type": "boolean",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "boolean"
         }
       },
       "name": "user",
