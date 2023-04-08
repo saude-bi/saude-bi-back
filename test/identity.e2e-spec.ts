@@ -10,7 +10,7 @@ import { hash } from 'bcrypt'
 import { User } from '@modules/identity/user/entities/user.entity'
 import { CreateUserDto } from '@modules/identity/user/dto/create-user.dto'
 
-describe('Product Module (e2e)', () => {
+describe('Identity Module (e2e)', () => {
   let app: INestApplication
   let agent: SuperAgentTest
   let server: any

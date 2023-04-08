@@ -6,11 +6,12 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  NotFoundException,
   Param,
   Post,
   UseGuards
 } from '@nestjs/common'
-import { ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { CheckPolicies, PoliciesGuard } from '../auth/casl/check-policies.decorator'
 import { Action } from '../auth/casl/types'
 import { AuthUser } from '../auth/decorators/auth-user.decorator'
@@ -31,9 +32,16 @@ export class UserController {
 
     return ability.can(Action.Read, user)
   })
+  @ApiBearerAuth()
   @Get(':username')
   async findOne(@Param('username') username: string) {
-    return await this.userService.findOne(username)
+    const user = await this.userService.findOne(username)
+
+    if (!user) {
+      throw new NotFoundException()
+    }
+
+    return user
   }
 
   @Post()
@@ -42,13 +50,16 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete(':username')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiBearerAuth()
+  @Delete(':username')
   async remove(@Param('username') username: string, @AuthUser() currentUser: User): Promise<void> {
     if (currentUser.username !== username) {
       throw new ForbiddenException()
     }
 
-    await this.userService.remove(username)
+    if (!(await this.userService.remove(username))) {
+      throw new NotFoundException()
+    }
   }
 }

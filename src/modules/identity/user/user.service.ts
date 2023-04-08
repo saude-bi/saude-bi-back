@@ -2,7 +2,7 @@ import { PaginationQuery, PaginationResponse } from '@libs/types/pagination'
 import { getPaginationOptions } from '@libs/utils/pagination.utils'
 import { EntityRepository, wrap } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { hash } from 'bcrypt'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
@@ -28,7 +28,7 @@ export class UserService {
     const user = await this.userRepository.findOne({ username })
 
     if (!user) {
-      throw new NotFoundException()
+      return null
     }
 
     return user
@@ -47,8 +47,10 @@ export class UserService {
     return existingUser
   }
 
-  async remove(username: string): Promise<void> {
+  async remove(username: string): Promise<boolean> {
     const user = await this.findOne(username)
     await this.userRepository.removeAndFlush(user)
+
+    return !!user
   }
 }
