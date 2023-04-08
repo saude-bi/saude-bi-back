@@ -18,8 +18,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     })
   }
 
-  async validate(test: DecodedJwt) {
-    const user = await this.userService.findOne(test.username)
+  async validate(jwt: DecodedJwt) {
+    const user = await this.userService.findOne(jwt.username)
 
     if (!user) {
       throw new ForbiddenException()
