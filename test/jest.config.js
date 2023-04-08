@@ -1,13 +1,13 @@
 module.exports = {
-  globals: {
-    'ts-jest': {
-      isolatedModules: true,
-      tsconfig: '<rootDir>/tsconfig.json'
-    }
-  },
   testEnvironment: 'node',
   transform: {
-    '^.+\\.ts$': 'ts-jest'
+    '^.+\\.ts$': [
+      'ts-jest',
+      {
+        isolatedModules: true,
+        tsconfig: '<rootDir>/tsconfig.json'
+      }
+    ]
   },
   testRegex: '.spec.ts$',
   rootDir: '..',
@@ -20,5 +20,5 @@ module.exports = {
     '@modules/(.*)': '<rootDir>/src/modules/$1'
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: './coverage',
+  coverageDirectory: './coverage'
 }
