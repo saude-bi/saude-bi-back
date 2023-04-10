@@ -8,7 +8,6 @@ import {
   Delete,
   UseGuards,
   NotFoundException,
-  ParseUUIDPipe,
   Query,
   Put
 } from '@nestjs/common'
@@ -22,6 +21,7 @@ import { Establishment } from './entities/establishment.entity'
 import { SynchronizationQueryDto } from './dto/synchronize-query.dto'
 import { EstablishmentService } from './services/establishment.service'
 import { SynchronizationService } from './services/synchronization.service'
+import { PaginationQuery } from '@libs/types/pagination'
 
 @ApiTags('Establishment')
 @ApiBearerAuth()
@@ -41,14 +41,14 @@ export class EstablishmentController {
 
   @CheckPolicies((ability) => ability.can(Action.List, Establishment))
   @Get()
-  async findAll() {
-    return await this.establishmentService.findAll()
+  async findAll(@Query() query: PaginationQuery) {
+    return await this.establishmentService.findAll(query)
   }
 
   @CheckPolicies((ability) => ability.can(Action.Read, Establishment))
-  @Get(':uuid')
-  async findOne(@Param('uuid', ParseUUIDPipe) uuid: string) {
-    const establishment = await this.establishmentService.findOne(uuid)
+  @Get(':cnes')
+  async findOne(@Param('cnes') cnes: string) {
+    const establishment = await this.establishmentService.findOne(cnes)
 
     if (!establishment) {
       throw new NotFoundException()
@@ -58,18 +58,18 @@ export class EstablishmentController {
   }
 
   @CheckPolicies((ability) => ability.can(Action.Update, Establishment))
-  @Patch(':uuid')
+  @Patch(':cnes')
   async update(
-    @Param('uuid', ParseUUIDPipe) uuid: string,
+    @Param('cnes') cnes: string,
     @Body() updateEstablishmentDto: UpdateEstablishmentDto
   ) {
-    return await this.establishmentService.update(uuid, updateEstablishmentDto)
+    return await this.establishmentService.update(cnes, updateEstablishmentDto)
   }
 
   @CheckPolicies((ability) => ability.can(Action.Delete, Establishment))
-  @Delete(':uuid')
-  async remove(@Param('uuid', ParseUUIDPipe) uuid: string) {
-    const couldRemove = await this.establishmentService.remove(uuid)
+  @Delete(':cnes')
+  async remove(@Param('cnes') cnes: string) {
+    const couldRemove = await this.establishmentService.remove(cnes)
     if (!couldRemove) {
       throw new NotFoundException()
     }

@@ -25,13 +25,7 @@ export class UserService {
   }
 
   async findOne(username: string): Promise<User> {
-    const user = await this.userRepository.findOne({ username })
-
-    if (!user) {
-      return null
-    }
-
-    return user
+    return await this.userRepository.findOne({ username })
   }
 
   async findAll(query: PaginationQuery): Promise<PaginationResponse<User>> {

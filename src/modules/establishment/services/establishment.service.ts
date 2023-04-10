@@ -1,4 +1,6 @@
-import { EntityRepository } from '@mikro-orm/core'
+import { PaginationQuery, PaginationResponse } from '@libs/types/pagination'
+import { getPaginationOptions } from '@libs/utils/pagination.utils'
+import { EntityRepository, wrap } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { Injectable } from '@nestjs/common'
 import { CreateEstablishmentDto } from '../dto/create-establishment.dto'
@@ -13,28 +15,50 @@ export class EstablishmentService {
   ) {}
 
   async create(createEstablishmentDto: CreateEstablishmentDto) {
-    console.log(createEstablishmentDto)
-    return 'This action adds a new establishment'
+    const newUser = this.establishmentRepository.create(createEstablishmentDto)
+    await this.establishmentRepository.persistAndFlush(newUser)
+
+    return newUser
   }
 
-  async findAll() {
-    return `This action returns all establishment`
+  async findAll(query: PaginationQuery) {
+    const [result, total] = await this.establishmentRepository.findAndCount(
+      {},
+      getPaginationOptions(query)
+    )
+
+    return new PaginationResponse(query, total, result)
   }
 
   async findOne(cnes: string) {
-    return `This action returns a #${cnes} establishment`
+    return await this.establishmentRepository.findOne({ cnes })
   }
 
-  async update(cnes: string, updateEstablishmentDto: UpdateEstablishmentDto) {
-    console.log(updateEstablishmentDto)
-    return `This action updates a #${cnes} establishment`
+  async update(cnes: string, updated: UpdateEstablishmentDto) {
+    const existing = await this.findOne(cnes)
+    wrap(existing).assign(updated)
+
+    await this.establishmentRepository.persistAndFlush(existing)
+    return existing
   }
 
   async upsert(establishment: CreateEstablishmentDto) {
+    const cnes = establishment.cnes
+    console.log(cnes)
+
+    if (this.findOne(cnes)) {
+      this.update(cnes, establishment)
+    } else {
+      this.create(establishment)
+    }
+
     await this.establishmentRepository.upsert(establishment)
   }
 
   async remove(cnes: string) {
-    return `This action removes a #${cnes} establishment`
+    const user = await this.findOne(cnes)
+    await this.establishmentRepository.removeAndFlush(user)
+
+    return !!user
   }
 }

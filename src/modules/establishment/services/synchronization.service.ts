@@ -19,14 +19,18 @@ export class SynchronizationService {
   ) {}
 
   async synchronize(year: number, month: number) {
-    const filePath = path.join(process.cwd(), this.configService.get('DOWNLOAD_PATH'))
+    const directory = path.join(process.cwd(), this.configService.get('DOWNLOAD_PATH'))
 
     this.logger.log('Downloading datasus database...')
 
     const paddedMonth = month.toString().padStart(2, '0')
+    const filename = `BASE_DE_DADOS_CNES_${year}${paddedMonth}.ZIP`
+    const filepath = path.join(directory, filename)
+
     const downloadSuccessful = await this.dataDownloader.downloadFTP(
-      `ftp://ftp.datasus.gov.br/cnes/BASE_DE_DADOS_CNES_${year}${paddedMonth}.ZIP`,
-      filePath
+      'ftp.datasus.gov.br',
+      `/cnes/${filename}`,
+      filepath
     )
 
     if (!downloadSuccessful) {
@@ -36,8 +40,8 @@ export class SynchronizationService {
     this.logger.log('Unzipping csv file from datasus database...')
 
     const dataStream = await this.fileIOService.unzipped(
-      filePath,
-      `tbEstabelecimento${year}{$paddedMonth}.csv`
+      filepath,
+      `tbEstabelecimento${year}${paddedMonth}.csv`
     )
 
     if (!dataStream) {
@@ -49,13 +53,17 @@ export class SynchronizationService {
     const establishments = await this.fileIOService.mapLinesFromStream<Establishment>(
       (line) => {
         const csv = line.split(';')
-        const cnpj = csv[2]
+        const cnpj: string = JSON.parse(csv[2])
 
         if (cnpj !== this.configService.get('CNPJ_MANTENEDORA')) {
           return null
         }
 
-        const establishment = plainToInstance(Establishment, { name: csv[6], cnes: csv[1] })
+        const establishment = plainToInstance(Establishment, {
+          name: JSON.parse(csv[6]),
+          cnes: JSON.parse(csv[1])
+        })
+
         return establishment
       },
       dataStream,
@@ -63,6 +71,7 @@ export class SynchronizationService {
     )
 
     this.logger.log('Persisting objects to repository...')
+    console.log(establishments)
 
     establishments.forEach(async (establishment) => {
       try {

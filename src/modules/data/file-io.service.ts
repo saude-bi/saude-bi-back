@@ -1,7 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { createReadStream, existsSync, ReadStream, writeFileSync } from 'fs'
+import fs from 'fs'
 import readline from 'readline'
 import yauzl from 'yauzl'
+import path from 'path'
 
 type ObjectMapper<T> = (line: string) => T | null
 type LinesMapperOptions = {
@@ -22,6 +24,23 @@ export class FileIOService {
     writeFileSync(path, buffer)
   }
 
+  async makePathIfNotExists(dir: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      fs.mkdir(dir, { recursive: true }, (err, path) => {
+        if (err) {
+          reject(err)
+          return
+        }
+
+        resolve(path)
+      })
+    })
+  }
+
+  directoryFrom(filePath: string): string {
+    return path.dirname(filePath)
+  }
+
   async unzipped(path: string, filename: string): Promise<ReadStream> {
     if (!this.fileExists(path)) {
       throw new Error('Tried to read ${path}, but file was not found')
@@ -36,7 +55,7 @@ export class FileIOService {
 
         zipfile.readEntry()
         zipfile.on('entry', (entry) => {
-          if (entry.filename !== filename) {
+          if (entry.fileName !== filename) {
             zipfile.readEntry()
             return
           }
@@ -82,6 +101,7 @@ export class FileIOService {
       }
 
       if (lineNumber < parsedOptions.start) {
+        lineNumber++
         continue
       }
 
