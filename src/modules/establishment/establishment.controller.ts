@@ -26,7 +26,7 @@ import { PaginationQuery } from '@libs/types/pagination'
 @ApiTags('Establishment')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PoliciesGuard)
-@Controller('establishment')
+@Controller('establishments')
 export class EstablishmentController {
   constructor(
     private readonly establishmentService: EstablishmentService,
@@ -76,7 +76,7 @@ export class EstablishmentController {
   }
 
   @CheckPolicies((ability) => ability.can(Action.Create, Establishment))
-  @Put()
+  @Put('sync')
   async synchronize(@Query() { year, month }: SynchronizationQueryDto) {
     return await this.synchronizationService.synchronize(year, month)
   }
