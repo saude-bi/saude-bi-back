@@ -9,10 +9,10 @@ export class DataDownloader {
     private readonly fileIOService: FileIOService
   ) {}
 
-  async download(url: string, path: string): Promise<boolean> {
+  async downloadFTP(url: string, path: string): Promise<boolean> {
     const response = await this.httpService
       .get(url, {
-        responseType: 'blob'
+        responseType: 'stream'
       })
       .toPromise()
 

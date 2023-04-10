@@ -44,7 +44,8 @@ const helperModules = [
       HOST: Joi.string().required(),
       MODE: Joi.string().required(),
       JWT_SECRET: Joi.string().required(),
-      CNPJ_MANTENEDORA: Joi.string().required()
+      CNPJ_MANTENEDORA: Joi.string().required(),
+      DOWNLOAD_PATH: Joi.string().required()
     })
   }),
   CacheModule.registerAsync({

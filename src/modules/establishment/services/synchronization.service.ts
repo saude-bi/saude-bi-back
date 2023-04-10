@@ -1,10 +1,11 @@
 import { DataDownloader } from '@modules/data/data-downloader.service'
 import { FileIOService } from '@modules/data/file-io.service'
-import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { plainToInstance } from 'class-transformer'
 import { Establishment } from '../entities/establishment.entity'
 import { EstablishmentService } from './establishment.service'
+import path from 'path'
 
 @Injectable()
 export class SynchronizationService {
@@ -18,25 +19,34 @@ export class SynchronizationService {
   ) {}
 
   async synchronize(year: number, month: number) {
-    const path = 'insertPathHere'
+    const filePath = path.join(process.cwd(), this.configService.get('DOWNLOAD_PATH'))
+
+    this.logger.log('Downloading datasus database...')
 
     const paddedMonth = month.toString().padStart(2, '0')
-    const downloadSuccessful = this.dataDownloader.download(
+    const downloadSuccessful = await this.dataDownloader.downloadFTP(
       `ftp://ftp.datasus.gov.br/cnes/BASE_DE_DADOS_CNES_${year}${paddedMonth}.ZIP`,
-      path
+      filePath
     )
 
     if (!downloadSuccessful) {
-      throw new InternalServerErrorException()
+      throw new Error('Could not download CNES data from datasus database')
     }
 
-    const unzipSuccessful = await this.fileIOService.unzip(path)
+    this.logger.log('Unzipping csv file from datasus database...')
 
-    if (!unzipSuccessful) {
-      throw new InternalServerErrorException()
+    const dataStream = await this.fileIOService.unzipped(
+      filePath,
+      `tbEstabelecimento${year}{$paddedMonth}.csv`
+    )
+
+    if (!dataStream) {
+      throw new Error('Could not unzip expected file from data stream')
     }
 
-    const establishments = await this.fileIOService.mapFile<Establishment>(
+    this.logger.log('Mapping data from csv database to repository objects...')
+
+    const establishments = await this.fileIOService.mapLinesFromStream<Establishment>(
       (line) => {
         const csv = line.split(';')
         const cnpj = csv[2]
@@ -48,9 +58,11 @@ export class SynchronizationService {
         const establishment = plainToInstance(Establishment, { name: csv[6], cnes: csv[1] })
         return establishment
       },
-      path,
-      1
+      dataStream,
+      { start: 1 }
     )
+
+    this.logger.log('Persisting objects to repository...')
 
     establishments.forEach(async (establishment) => {
       try {
@@ -59,7 +71,5 @@ export class SynchronizationService {
         this.logger.error(e)
       }
     })
-
-    return
   }
 }

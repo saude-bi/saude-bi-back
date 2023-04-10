@@ -1,4 +1,5 @@
 import { EntityRepository } from '@mikro-orm/core'
+import { InjectRepository } from '@mikro-orm/nestjs'
 import { Injectable } from '@nestjs/common'
 import { CreateEstablishmentDto } from '../dto/create-establishment.dto'
 import { UpdateEstablishmentDto } from '../dto/update-establishment.dto'
@@ -6,7 +7,10 @@ import { Establishment } from '../entities/establishment.entity'
 
 @Injectable()
 export class EstablishmentService {
-  constructor(private readonly establishmentRepository: EntityRepository<Establishment>) {}
+  constructor(
+    @InjectRepository(Establishment)
+    private readonly establishmentRepository: EntityRepository<Establishment>
+  ) {}
 
   async create(createEstablishmentDto: CreateEstablishmentDto) {
     console.log(createEstablishmentDto)

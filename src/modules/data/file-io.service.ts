@@ -1,8 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common'
-import { createReadStream, existsSync, writeFileSync } from 'fs'
+import { createReadStream, existsSync, ReadStream, writeFileSync } from 'fs'
 import readline from 'readline'
+import yauzl from 'yauzl'
 
 type ObjectMapper<T> = (line: string) => T | null
+type LinesMapperOptions = {
+  start: number
+  count: number
+  onError?: (line: string, lineNumber: number, error: Error) => void
+}
 
 @Injectable()
 export class FileIOService {
@@ -16,48 +22,67 @@ export class FileIOService {
     writeFileSync(path, buffer)
   }
 
-  async unzip(path: string): Promise<boolean> {
+  async unzipped(path: string, filename: string): Promise<ReadStream> {
     if (!this.fileExists(path)) {
       throw new Error('Tried to read ${path}, but file was not found')
     }
 
-    return true
+    return new Promise((resolve, reject) => {
+      yauzl.open(path, { lazyEntries: true }, (err, zipfile) => {
+        if (err) {
+          reject(err)
+          return
+        }
+
+        zipfile.readEntry()
+        zipfile.on('entry', (entry) => {
+          if (entry.filename !== filename) {
+            zipfile.readEntry()
+            return
+          }
+
+          zipfile.openReadStream(entry, (err, readStream) => {
+            if (err) {
+              reject(err)
+              return
+            }
+
+            resolve(readStream)
+          })
+        })
+
+        zipfile.on('end', () => {
+          reject(new Error(`Could not find ${filename} in ${path}`))
+        })
+      })
+    })
   }
 
-  async mapFile<T>(
+  async mapLinesFromStream<T>(
     objectMapper: ObjectMapper<T>,
-    path: string,
-    startLine = 0,
-    lineCount?: number
+    stream: ReadStream,
+    options?: Partial<LinesMapperOptions>
   ): Promise<T[]> {
-    if (!this.fileExists(path)) {
-      throw new Error('Tried to read ${path}, but file was not found')
+    const parsedOptions: LinesMapperOptions = {
+      start: options?.start || 0,
+      count: options?.count || Infinity,
+      onError: options?.onError
     }
 
-    const fileStream = createReadStream(path, { encoding: 'utf8' })
-    const rl = readline.createInterface({
-      input: fileStream,
+    const lines = readline.createInterface({
+      input: stream,
       crlfDelay: Infinity
     })
 
-    const countLine = (
-      (i = 0) =>
-      () =>
-        i++
-    )()
-
+    let lineNumber = 0
     const objects = []
-    for await (const line of rl) {
-      const lineNumber = countLine()
-
-      if (lineNumber < startLine) {
-        continue
+    for await (const line of lines) {
+      if (lineNumber > parsedOptions.count) {
+        break
       }
 
-      if (lineCount && lineNumber > lineCount) {
-        rl.close()
-        fileStream.close()
-        return objects
+      if (lineNumber < parsedOptions.start) {
+        continue
       }
 
       try {
@@ -67,13 +92,36 @@ export class FileIOService {
           objects.push(mappedObject)
         }
       } catch (err) {
-        this.logger.error(`Error parsing line ${lineNumber} of ${path}: ${err}`)
+        parsedOptions.onError(line, lineNumber, err)
       }
+
+      lineNumber++
     }
 
-    rl.close()
-    fileStream.close()
-
+    lines.close()
     return objects
+  }
+
+  async mapFile<T>(
+    objectMapper: ObjectMapper<T>,
+    path: string,
+    start = 0,
+    count?: number
+  ): Promise<T[]> {
+    if (!this.fileExists(path)) {
+      throw new Error('Tried to read ${path}, but file was not found')
+    }
+
+    const fileStream = createReadStream(path, { encoding: 'utf8' })
+    const result = await this.mapLinesFromStream(objectMapper, fileStream, {
+      start,
+      count,
+      onError: (_, lineNumber, error) => {
+        this.logger.error(`Error parsing line ${lineNumber} of ${path}: ${error}`)
+      }
+    })
+
+    fileStream.close()
+    return result
   }
 }
