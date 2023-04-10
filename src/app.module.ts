@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common'
-import { ConfigModule } from '@nestjs/config'
+import { ConfigModule, ConfigService } from '@nestjs/config'
 import { LoggerModule } from 'nestjs-pino'
 import Joi from 'joi'
 import { redisStore } from 'cache-manager-redis-store'
@@ -19,13 +19,22 @@ const helperModules = [
   TerminusModule,
   ScheduleModule.forRoot(),
   MikroOrmModule.forRoot(),
-  LoggerModule.forRoot({
-    pinoHttp: {
-      transport: {
-        target: 'pino-pretty',
-        options: {
-          singleLine: true,
-          colorize: true
+  LoggerModule.forRootAsync({
+    inject: [ConfigService],
+    useFactory: async (configService: ConfigService) => {
+      const isProduction = configService.get('MODE') === 'production'
+
+      return {
+        pinoHttp: {
+          level: isProduction ? 'info' : 'debug',
+          transport: isProduction
+            ? undefined
+            : {
+                target: 'pino-pretty',
+                options: {
+                  colorize: true
+                }
+              }
         }
       }
     }
