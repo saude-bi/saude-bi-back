@@ -10,6 +10,7 @@
 /build
 /dist
 /.log
+/data
 
 # misc
 .DS_Store
@@ -28,9 +29,6 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 .env
-
-# cdn
-/cdn
 
 # typescript
 *.tsbuildinfo

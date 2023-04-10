@@ -6,7 +6,7 @@ export class AbstractEntity {
   id: string = randomUUID()
 }
 
-export class AuditedEntity extends AbstractEntity {
+export class Audited {
   @Property()
   created: Date = new Date()
 

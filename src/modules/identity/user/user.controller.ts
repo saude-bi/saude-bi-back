@@ -58,7 +58,8 @@ export class UserController {
       throw new ForbiddenException()
     }
 
-    if (!(await this.userService.remove(username))) {
+    const couldRemove = await this.userService.remove(username)
+    if (!couldRemove) {
       throw new NotFoundException()
     }
   }
