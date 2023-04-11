@@ -13,6 +13,7 @@ import { IdentityModule } from '@modules/identity/identity.module'
 import { MikroOrmModule } from '@mikro-orm/nestjs'
 import { EstablishmentModule } from '@modules/establishment/establishment.module'
 import { DataModule } from '@modules/data/data.module'
+import { AppConfigModule } from '@modules/app-config/app-config.module'
 
 const helperModules = [
   HttpModule,
@@ -57,6 +58,7 @@ const helperModules = [
       DOWNLOAD_PATH: Joi.string().required()
     })
   }),
+  AppConfigModule,
   CacheModule.registerAsync({
     useFactory: async () => ({
       store: (await redisStore({ url: 'redis://redis:6379', ttl: 5 })) as unknown as CacheStore
