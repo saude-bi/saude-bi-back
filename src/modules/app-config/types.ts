@@ -6,11 +6,11 @@ export type DatabaseConfig = {
   name: string
 }
 
-export type AppMode = 'dev' | 'production'
-export type AppConfig = {
+export type ApplicationMode = 'dev' | 'production'
+export type ApplicationConfig = {
   host: string
   port: number
-  mode: AppMode
+  mode: ApplicationMode
 }
 
 export type SecurityConfig = {

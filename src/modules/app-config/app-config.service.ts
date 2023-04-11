@@ -1,16 +1,22 @@
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { AppConfig, AppMode, DatabaseConfig, SecurityConfig, SynchronizationConfig } from './types'
+import {
+  ApplicationConfig,
+  ApplicationMode,
+  DatabaseConfig,
+  SecurityConfig,
+  SynchronizationConfig
+} from './types'
 
 @Injectable()
 export class AppConfigService {
-  constructor(private configService: ConfigService) {}
+  constructor(private readonly configService: ConfigService) {}
 
-  get app(): AppConfig {
+  get app(): ApplicationConfig {
     return {
       host: this.configService.get<string>('HOST'),
       port: this.configService.get<number>('PORT'),
-      mode: this.configService.get<AppMode>('MODE')
+      mode: this.configService.get<ApplicationMode>('MODE')
     }
   }
 
@@ -35,5 +41,9 @@ export class AppConfigService {
       maintainerCnpj: this.configService.get<string>('MAINTAINER_CNPJ'),
       downloadPath: this.configService.get<string>('DOWNLOAD_PATH')
     }
+  }
+
+  get isProduction(): boolean {
+    return this.app.mode === 'production'
   }
 }

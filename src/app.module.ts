@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common'
-import { ConfigModule, ConfigService } from '@nestjs/config'
+import { ConfigModule } from '@nestjs/config'
 import { LoggerModule } from 'nestjs-pino'
 import Joi from 'joi'
 import { redisStore } from 'cache-manager-redis-store'
@@ -13,7 +13,8 @@ import { IdentityModule } from '@modules/identity/identity.module'
 import { MikroOrmModule } from '@mikro-orm/nestjs'
 import { EstablishmentModule } from '@modules/establishment/establishment.module'
 import { DataModule } from '@modules/data/data.module'
-import { AppConfigModule } from '@modules/app-config/app-config.module'
+import { AppConfigServiceModule } from '@modules/app-config/app-config.module'
+import { AppConfigService } from '@modules/app-config/app-config.service'
 
 const helperModules = [
   HttpModule,
@@ -21,14 +22,12 @@ const helperModules = [
   ScheduleModule.forRoot(),
   MikroOrmModule.forRoot(),
   LoggerModule.forRootAsync({
-    inject: [ConfigService],
-    useFactory: async (configService: ConfigService) => {
-      const isProduction = configService.get('MODE') === 'production'
-
+    inject: [AppConfigService],
+    useFactory: async (config: AppConfigService) => {
       return {
         pinoHttp: {
-          level: isProduction ? 'info' : 'debug',
-          transport: isProduction
+          level: config.isProduction ? 'info' : 'debug',
+          transport: config.isProduction
             ? undefined
             : {
                 target: 'pino-pretty',
@@ -41,9 +40,7 @@ const helperModules = [
     }
   }),
   ConfigModule.forRoot({
-    isGlobal: true,
     cache: true,
-    // TODO convert to nested config
     validationSchema: Joi.object({
       DB_HOST: Joi.string().required(),
       DB_PORT: Joi.number().required(),
@@ -58,7 +55,7 @@ const helperModules = [
       DOWNLOAD_PATH: Joi.string().required()
     })
   }),
-  AppConfigModule,
+  AppConfigServiceModule,
   CacheModule.registerAsync({
     useFactory: async () => ({
       store: (await redisStore({ url: 'redis://redis:6379', ttl: 5 })) as unknown as CacheStore

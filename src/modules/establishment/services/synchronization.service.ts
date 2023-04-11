@@ -1,11 +1,11 @@
 import { DataDownloader } from '@modules/data/data-downloader.service'
 import { FileIOService } from '@modules/data/file-io.service'
 import { Injectable, Logger } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
 import { plainToInstance } from 'class-transformer'
 import { Establishment } from '../entities/establishment.entity'
 import { EstablishmentService } from './establishment.service'
 import path from 'path'
+import { AppConfigService } from '@modules/app-config/app-config.service'
 
 @Injectable()
 export class SynchronizationService {
@@ -15,11 +15,11 @@ export class SynchronizationService {
     private readonly establishmentService: EstablishmentService,
     private readonly dataDownloader: DataDownloader,
     private readonly fileIOService: FileIOService,
-    private readonly configService: ConfigService
+    private readonly config: AppConfigService
   ) {}
 
   async synchronize(year: number, month: number) {
-    const directory = path.join(process.cwd(), this.configService.get('DOWNLOAD_PATH'))
+    const directory = path.join(process.cwd(), this.config.synchronization.downloadPath)
 
     this.logger.log('Downloading datasus database...')
 
@@ -55,7 +55,7 @@ export class SynchronizationService {
         const csv = line.split(';')
         const cnpj: string = JSON.parse(csv[2])
 
-        if (cnpj !== this.configService.get('CNPJ_MANTENEDORA')) {
+        if (cnpj !== this.config.synchronization.maintainerCnpj) {
           return null
         }
 
