@@ -1,12 +1,8 @@
 import { Module } from '@nestjs/common'
 import { LoggerModule } from 'nestjs-pino'
 import { redisStore } from 'cache-manager-redis-store'
-import { ScheduleModule } from '@nestjs/schedule'
-import { AppController } from './app.controller'
-import { TerminusModule } from '@nestjs/terminus'
 import { CacheModule, CacheStore } from '@nestjs/cache-manager'
 import { DashboardModule } from '@modules/dashboard/dashboard.module'
-import { HttpModule } from '@nestjs/axios'
 import { IdentityModule } from '@modules/identity/identity.module'
 import { MikroOrmModule } from '@mikro-orm/nestjs'
 import { EstablishmentModule } from '@modules/establishment/establishment.module'
@@ -15,10 +11,7 @@ import { AppConfigModule } from '@modules/app-config/app-config.module'
 import { AppConfig } from '@modules/app-config/app-config.service'
 
 const helperModules = [
-  HttpModule,
-  TerminusModule,
   AppConfigModule,
-  ScheduleModule.forRoot(),
   MikroOrmModule.forRoot(),
   LoggerModule.forRootAsync({
     inject: [AppConfig],
@@ -47,7 +40,6 @@ const helperModules = [
 ]
 
 @Module({
-  controllers: [AppController],
   imports: [...helperModules, IdentityModule, DashboardModule, EstablishmentModule, DataModule]
 })
 export class AppModule {}
