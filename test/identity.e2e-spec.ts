@@ -9,6 +9,7 @@ import { ConfigModule } from '@nestjs/config'
 import { hash } from 'bcrypt'
 import { User } from '@modules/identity/user/entities/user.entity'
 import { CreateUserDto } from '@modules/identity/user/dto/create-user.dto'
+import { AppConfigModule } from '@modules/app-config/app-config.module'
 
 describe('Identity Module (e2e)', () => {
   let app: INestApplication
@@ -20,6 +21,7 @@ describe('Identity Module (e2e)', () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
         IdentityModule,
+        AppConfigModule,
         ConfigModule.forRoot({
           isGlobal: true,
           ignoreEnvFile: true,

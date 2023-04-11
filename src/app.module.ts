@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common'
-import { ConfigModule, ConfigService } from '@nestjs/config'
+import { ConfigModule } from '@nestjs/config'
 import { LoggerModule } from 'nestjs-pino'
 import Joi from 'joi'
 import { redisStore } from 'cache-manager-redis-store'
@@ -13,6 +13,8 @@ import { IdentityModule } from '@modules/identity/identity.module'
 import { MikroOrmModule } from '@mikro-orm/nestjs'
 import { EstablishmentModule } from '@modules/establishment/establishment.module'
 import { DataModule } from '@modules/data/data.module'
+import { AppConfigModule } from '@modules/app-config/app-config.module'
+import { AppConfig } from '@modules/app-config/app-config.service'
 
 const helperModules = [
   HttpModule,
@@ -20,14 +22,12 @@ const helperModules = [
   ScheduleModule.forRoot(),
   MikroOrmModule.forRoot(),
   LoggerModule.forRootAsync({
-    inject: [ConfigService],
-    useFactory: async (configService: ConfigService) => {
-      const isProduction = configService.get('MODE') === 'production'
-
+    inject: [AppConfig],
+    useFactory: async (config: AppConfig) => {
       return {
         pinoHttp: {
-          level: isProduction ? 'info' : 'debug',
-          transport: isProduction
+          level: config.isProduction ? 'info' : 'debug',
+          transport: config.isProduction
             ? undefined
             : {
                 target: 'pino-pretty',
@@ -40,23 +40,22 @@ const helperModules = [
     }
   }),
   ConfigModule.forRoot({
-    isGlobal: true,
     cache: true,
-    // TODO convert to nested config
     validationSchema: Joi.object({
-      DB_HOST: Joi.string().required(),
-      DB_PORT: Joi.number().required(),
+      DB_HOST: Joi.string().hostname().required(),
+      DB_PORT: Joi.number().port().required(),
       DB_USERNAME: Joi.string().required(),
       DB_PASSWORD: Joi.string().required(),
       DB_DATABASE: Joi.string().required(),
-      PORT: Joi.number().required(),
-      HOST: Joi.string().required(),
-      MODE: Joi.string().required(),
+      PORT: Joi.number().port().required(),
+      HOST: Joi.string().hostname().required(),
+      MODE: Joi.string().valid('dev', 'production').required(),
       JWT_SECRET: Joi.string().required(),
-      CNPJ_MANTENEDORA: Joi.string().required(),
+      CNPJ_MANTENEDORA: Joi.string().length(14).required(),
       DOWNLOAD_PATH: Joi.string().required()
     })
   }),
+  AppConfigModule,
   CacheModule.registerAsync({
     useFactory: async () => ({
       store: (await redisStore({ url: 'redis://redis:6379', ttl: 5 })) as unknown as CacheStore
