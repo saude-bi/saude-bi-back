@@ -1,18 +1,44 @@
-import { Test, TestingModule } from '@nestjs/testing'
+import { TestBed } from '@automock/jest'
+import { ConfigService } from '@nestjs/config'
 import { AppConfigService } from './app-config.service'
 
 describe('AppConfigService', () => {
-  let service: AppConfigService
+  let config: AppConfigService
+  let globalConfig: ConfigService
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [AppConfigService]
-    }).compile()
+    const { unit, unitRef } = TestBed.create(AppConfigService)
+      .mock(ConfigService)
+      .using({
+        get: jest.fn().mockImplementation((key: string) => {
+          if (key === 'MODE') {
+            return 'dev'
+          }
 
-    service = module.get<AppConfigService>(AppConfigService)
+          if (key === 'PORT') {
+            return 1234
+          }
+
+          if (key === 'DB_NAME') {
+            return 'postgres'
+          }
+        })
+      })
+      .compile()
+
+    config = unit
+    globalConfig = unitRef.get(ConfigService)
   })
 
-  it('should be defined', () => {
-    expect(service).toBeDefined()
+  it('should return the correct config values', () => {
+    expect(config.db.name).toBe(globalConfig.get('DB_NAME'))
+  })
+
+  it('should allow destructuring into multiple config values', () => {
+    const { mode, port } = config.app
+    expect({ mode, port }).toMatchObject({
+      mode: globalConfig.get('MODE'),
+      port: globalConfig.get('PORT')
+    })
   })
 })
