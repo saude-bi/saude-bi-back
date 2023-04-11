@@ -40,6 +40,7 @@ const helperModules = [
     }
   }),
   ConfigModule.forRoot({
+    isGlobal: true,
     cache: true,
     validationSchema: Joi.object({
       DB_HOST: Joi.string().hostname().required(),
