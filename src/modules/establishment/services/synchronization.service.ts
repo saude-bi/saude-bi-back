@@ -71,7 +71,6 @@ export class SynchronizationService {
     )
 
     this.logger.log('Persisting objects to repository...')
-    console.log(establishments)
 
     establishments.forEach(async (establishment) => {
       try {

@@ -44,7 +44,6 @@ export class EstablishmentService {
 
   async upsert(establishment: CreateEstablishmentDto) {
     const cnes = establishment.cnes
-    console.log(cnes)
 
     if (this.findOne(cnes)) {
       this.update(cnes, establishment)
