@@ -1,7 +1,5 @@
 import { Module } from '@nestjs/common'
-import { ConfigModule } from '@nestjs/config'
 import { LoggerModule } from 'nestjs-pino'
-import Joi from 'joi'
 import { redisStore } from 'cache-manager-redis-store'
 import { ScheduleModule } from '@nestjs/schedule'
 import { AppController } from './app.controller'
@@ -19,6 +17,7 @@ import { AppConfig } from '@modules/app-config/app-config.service'
 const helperModules = [
   HttpModule,
   TerminusModule,
+  AppConfigModule,
   ScheduleModule.forRoot(),
   MikroOrmModule.forRoot(),
   LoggerModule.forRootAsync({
@@ -39,24 +38,6 @@ const helperModules = [
       }
     }
   }),
-  ConfigModule.forRoot({
-    isGlobal: true,
-    cache: true,
-    validationSchema: Joi.object({
-      DB_HOST: Joi.string().hostname().required(),
-      DB_PORT: Joi.number().port().required(),
-      DB_USERNAME: Joi.string().required(),
-      DB_PASSWORD: Joi.string().required(),
-      DB_DATABASE: Joi.string().required(),
-      PORT: Joi.number().port().required(),
-      HOST: Joi.string().hostname().required(),
-      MODE: Joi.string().valid('dev', 'production').required(),
-      JWT_SECRET: Joi.string().required(),
-      CNPJ_MANTENEDORA: Joi.string().length(14).required(),
-      DOWNLOAD_PATH: Joi.string().required()
-    })
-  }),
-  AppConfigModule,
   CacheModule.registerAsync({
     useFactory: async () => ({
       store: (await redisStore({ url: 'redis://redis:6379', ttl: 5 })) as unknown as CacheStore
