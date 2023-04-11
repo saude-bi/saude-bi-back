@@ -1,11 +1,11 @@
 import { Global, Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
-import { AppConfigService } from './app-config.service'
+import { AppConfig } from './app-config.service'
 
 @Global()
 @Module({
-  providers: [AppConfigService],
+  providers: [AppConfig],
   imports: [ConfigModule],
-  exports: [AppConfigService]
+  exports: [AppConfig]
 })
-export class AppConfigServiceModule {}
+export class AppConfigModule {}

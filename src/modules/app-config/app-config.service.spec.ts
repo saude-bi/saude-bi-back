@@ -1,13 +1,13 @@
 import { TestBed } from '@automock/jest'
 import { ConfigService } from '@nestjs/config'
-import { AppConfigService } from './app-config.service'
+import { AppConfig } from './app-config.service'
 
-describe('AppConfigService', () => {
-  let config: AppConfigService
+describe('AppConfig', () => {
+  let config: AppConfig
   let globalConfig: ConfigService
 
   beforeEach(async () => {
-    const { unit, unitRef } = TestBed.create(AppConfigService)
+    const { unit, unitRef } = TestBed.create(AppConfig)
       .mock(ConfigService)
       .using({
         get: jest.fn().mockImplementation((key: string) => {

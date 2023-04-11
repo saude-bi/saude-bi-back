@@ -13,8 +13,8 @@ import { IdentityModule } from '@modules/identity/identity.module'
 import { MikroOrmModule } from '@mikro-orm/nestjs'
 import { EstablishmentModule } from '@modules/establishment/establishment.module'
 import { DataModule } from '@modules/data/data.module'
-import { AppConfigServiceModule } from '@modules/app-config/app-config.module'
-import { AppConfigService } from '@modules/app-config/app-config.service'
+import { AppConfigModule } from '@modules/app-config/app-config.module'
+import { AppConfig } from '@modules/app-config/app-config.service'
 
 const helperModules = [
   HttpModule,
@@ -22,8 +22,8 @@ const helperModules = [
   ScheduleModule.forRoot(),
   MikroOrmModule.forRoot(),
   LoggerModule.forRootAsync({
-    inject: [AppConfigService],
-    useFactory: async (config: AppConfigService) => {
+    inject: [AppConfig],
+    useFactory: async (config: AppConfig) => {
       return {
         pinoHttp: {
           level: config.isProduction ? 'info' : 'debug',
@@ -55,7 +55,7 @@ const helperModules = [
       DOWNLOAD_PATH: Joi.string().required()
     })
   }),
-  AppConfigServiceModule,
+  AppConfigModule,
   CacheModule.registerAsync({
     useFactory: async () => ({
       store: (await redisStore({ url: 'redis://redis:6379', ttl: 5 })) as unknown as CacheStore

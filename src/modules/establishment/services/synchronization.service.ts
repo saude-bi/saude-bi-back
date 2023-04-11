@@ -5,7 +5,7 @@ import { plainToInstance } from 'class-transformer'
 import { Establishment } from '../entities/establishment.entity'
 import { EstablishmentService } from './establishment.service'
 import path from 'path'
-import { AppConfigService } from '@modules/app-config/app-config.service'
+import { AppConfig } from '@modules/app-config/app-config.service'
 
 @Injectable()
 export class SynchronizationService {
@@ -15,7 +15,7 @@ export class SynchronizationService {
     private readonly establishmentService: EstablishmentService,
     private readonly dataDownloader: DataDownloader,
     private readonly fileIOService: FileIOService,
-    private readonly config: AppConfigService
+    private readonly config: AppConfig
   ) {}
 
   async synchronize(year: number, month: number) {

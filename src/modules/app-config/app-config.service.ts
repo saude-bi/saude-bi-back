@@ -9,7 +9,7 @@ import {
 } from './types'
 
 @Injectable()
-export class AppConfigService {
+export class AppConfig {
   constructor(private readonly configService: ConfigService) {}
 
   get app(): ApplicationConfig {
