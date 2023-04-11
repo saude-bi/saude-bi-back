@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common'
-import { createReadStream, existsSync, ReadStream, writeFileSync } from 'fs'
+import { createReadStream, existsSync, writeFileSync } from 'fs'
 import fs from 'fs'
 import readline from 'readline'
 import yauzl from 'yauzl'
@@ -42,7 +42,7 @@ export class FileIOService {
     return path.dirname(filePath)
   }
 
-  async unzipped(path: string, filename: string): Promise<ReadStream> {
+  async unzipped(path: string, filename: string): Promise<Readable> {
     if (!this.fileExists(path)) {
       throw new Error('Tried to read ${path}, but file was not found')
     }
