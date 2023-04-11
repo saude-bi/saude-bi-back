@@ -4,6 +4,7 @@ import fs from 'fs'
 import readline from 'readline'
 import yauzl from 'yauzl'
 import path from 'path'
+import { Readable } from 'stream'
 
 type ObjectMapper<T> = (line: string) => T | null
 type LinesMapperOptions = {
@@ -79,12 +80,12 @@ export class FileIOService {
 
   async mapLinesFromStream<T>(
     objectMapper: ObjectMapper<T>,
-    stream: ReadStream,
+    stream: Readable,
     options?: Partial<LinesMapperOptions>
   ): Promise<T[]> {
     const parsedOptions: LinesMapperOptions = {
       start: options?.start || 0,
-      count: options?.count || Infinity,
+      count: options?.count === undefined ? Infinity : options.count,
       onError: options?.onError
     }
 
@@ -96,7 +97,7 @@ export class FileIOService {
     let lineNumber = 0
     const objects = []
     for await (const line of lines) {
-      if (lineNumber > parsedOptions.count) {
+      if (lineNumber >= parsedOptions.start + parsedOptions.count) {
         break
       }
 
@@ -112,7 +113,9 @@ export class FileIOService {
           objects.push(mappedObject)
         }
       } catch (err) {
-        parsedOptions.onError(line, lineNumber, err)
+        if (parsedOptions.onError) {
+          parsedOptions.onError(line, lineNumber, err)
+        }
       }
 
       lineNumber++
