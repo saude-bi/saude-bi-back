@@ -1,3 +1,4 @@
+import { AppConfigModule } from '@modules/app-config/app-config.module'
 import { AppConfig } from '@modules/app-config/app-config.service'
 import { Module } from '@nestjs/common'
 import { JwtModule } from '@nestjs/jwt'
@@ -17,6 +18,7 @@ import { LocalStrategy } from './strategies/local.strategy'
     UserModule,
     PassportModule,
     JwtModule.registerAsync({
+      imports: [AppConfigModule],
       inject: [AppConfig],
       useFactory: async (config: AppConfig) => ({
         secret: config.security.jwtSecret,

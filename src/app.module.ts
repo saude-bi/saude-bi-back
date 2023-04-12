@@ -14,6 +14,7 @@ const helperModules = [
   AppConfigModule,
   MikroOrmModule.forRoot(),
   LoggerModule.forRootAsync({
+    imports: [AppConfigModule],
     inject: [AppConfig],
     useFactory: async (config: AppConfig) => {
       return {

@@ -9,6 +9,7 @@ import { AppConfig } from './app-config.service'
   exports: [AppConfig],
   imports: [
     ConfigModule.forRoot({
+      envFilePath: ['.env.test', '.env.dev', '.env'],
       cache: true,
       validationSchema: Joi.object({
         DB_HOST: Joi.string().hostname().required(),
