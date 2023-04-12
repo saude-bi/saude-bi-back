@@ -8,8 +8,8 @@ import { IdentityModule } from '@modules/identity/identity.module'
 import { hash } from 'bcrypt'
 import { User } from '@modules/identity/user/entities/user.entity'
 import { CreateUserDto } from '@modules/identity/user/dto/create-user.dto'
-import { AppConfigModule } from '@modules/app-config/app-config.module'
 import { AppConfig } from '@modules/app-config/app-config.service'
+import { AppConfigModule } from '@modules/app-config/app-config.module'
 
 describe('Identity Module (e2e)', () => {
   let app: INestApplication
@@ -19,20 +19,16 @@ describe('Identity Module (e2e)', () => {
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [IdentityModule, AppConfigModule],
-      providers: [
-        {
-          provide: AppConfig,
-          useValue: {
-            get security() {
-              return { jwtSecret: '12345' }
-            }
-          }
-        }
-      ]
+      imports: [IdentityModule, AppConfigModule]
     })
       .overrideProvider(getRepositoryToken(User))
       .useFactory({ factory: repositoryMockFactory })
+      .overrideProvider(AppConfig)
+      .useValue({
+        get security() {
+          return { jwtSecret: '12345' }
+        }
+      })
       .compile()
 
     app = moduleFixture.createNestApplication()
