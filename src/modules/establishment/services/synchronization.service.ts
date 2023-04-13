@@ -3,7 +3,6 @@ import { Injectable, Logger } from '@nestjs/common'
 import { plainToInstance } from 'class-transformer'
 import { Establishment } from '../entities/establishment.entity'
 import { EstablishmentService } from './establishment.service'
-import path from 'path'
 import { AppConfig } from '@modules/app-config/app-config.service'
 
 @Injectable()
@@ -17,15 +16,14 @@ export class SynchronizationService {
   ) {}
 
   async synchronize(year: number, month: number) {
-    const directory = path.join(process.cwd(), this.config.synchronization.downloadPath)
-
     const paddedMonth = month.toString().padStart(2, '0')
     const filename = `BASE_DE_DADOS_CNES_${year}${paddedMonth}.ZIP`
-    const filepath = path.join(directory, filename)
+
+    this.logger.log('Downloading data')
 
     const downloadedFile = await this.dataDownloader
       .ftp(`ftp.datasus.gov.br/cnes/${filename}`)
-      .downloadTo(filepath)
+      .download()
 
     const establishments = await downloadedFile
       .unzipped(`tbEstabelecimento${year}${paddedMonth}.csv`)
@@ -50,8 +48,10 @@ export class SynchronizationService {
         )
       )
 
-    establishments.forEach(async (establishment) => {
+    this.logger.log({ count: establishments.length }, 'Attempting to synchronize establishments')
+    for (const establishment of establishments) {
       try {
+        this.logger.verbose({ establishment }, 'Synchronizing establishment via upsert...')
         await this.establishmentService.upsert(establishment)
       } catch (e) {
         this.logger.warn(
@@ -59,6 +59,6 @@ export class SynchronizationService {
           'Failed to upsert an establishment during synchronization'
         )
       }
-    })
+    }
   }
 }
