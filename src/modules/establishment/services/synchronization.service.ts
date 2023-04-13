@@ -1,5 +1,4 @@
 import { DataDownloader } from '@modules/data/data-downloader.service'
-import { FileIOService } from '@modules/data/file-io.service'
 import { Injectable, Logger } from '@nestjs/common'
 import { plainToInstance } from 'class-transformer'
 import { Establishment } from '../entities/establishment.entity'
@@ -9,74 +8,56 @@ import { AppConfig } from '@modules/app-config/app-config.service'
 
 @Injectable()
 export class SynchronizationService {
-  private readonly logger = new Logger(FileIOService.name)
+  private readonly logger = new Logger(SynchronizationService.name)
 
   constructor(
     private readonly establishmentService: EstablishmentService,
     private readonly dataDownloader: DataDownloader,
-    private readonly fileIOService: FileIOService,
     private readonly config: AppConfig
   ) {}
 
   async synchronize(year: number, month: number) {
     const directory = path.join(process.cwd(), this.config.synchronization.downloadPath)
 
-    this.logger.log('Downloading datasus database...')
-
     const paddedMonth = month.toString().padStart(2, '0')
     const filename = `BASE_DE_DADOS_CNES_${year}${paddedMonth}.ZIP`
     const filepath = path.join(directory, filename)
 
-    const downloadSuccessful = await this.dataDownloader.downloadFTP(
-      'ftp.datasus.gov.br',
-      `/cnes/${filename}`,
-      filepath
-    )
+    const downloadedFile = await this.dataDownloader
+      .ftp(`ftp.datasus.gov.br/cnes/${filename}`)
+      .downloadTo(filepath)
 
-    if (!downloadSuccessful) {
-      throw new Error('Could not download CNES data from datasus database')
-    }
+    const establishments = await downloadedFile
+      .unzipped(`tbEstabelecimento${year}${paddedMonth}.csv`)
+      .then((data) =>
+        data.mapLines<Establishment>(
+          (line) => {
+            const csv = line.split(';')
+            const cnpj: string = JSON.parse(csv[2])
 
-    this.logger.log('Unzipping csv file from datasus database...')
+            if (cnpj !== this.config.synchronization.maintainerCnpj) {
+              return null
+            }
 
-    const dataStream = await this.fileIOService.unzipped(
-      filepath,
-      `tbEstabelecimento${year}${paddedMonth}.csv`
-    )
+            const establishment = plainToInstance(Establishment, {
+              name: JSON.parse(csv[6]),
+              cnes: JSON.parse(csv[1])
+            })
 
-    if (!dataStream) {
-      throw new Error('Could not unzip expected file from data stream')
-    }
-
-    this.logger.log('Mapping data from csv database to repository objects...')
-
-    const establishments = await this.fileIOService.mapLinesFromStream<Establishment>(
-      (line) => {
-        const csv = line.split(';')
-        const cnpj: string = JSON.parse(csv[2])
-
-        if (cnpj !== this.config.synchronization.maintainerCnpj) {
-          return null
-        }
-
-        const establishment = plainToInstance(Establishment, {
-          name: JSON.parse(csv[6]),
-          cnes: JSON.parse(csv[1])
-        })
-
-        return establishment
-      },
-      dataStream,
-      { start: 1 }
-    )
-
-    this.logger.log('Persisting objects to repository...')
+            return establishment
+          },
+          { start: 1 }
+        )
+      )
 
     establishments.forEach(async (establishment) => {
       try {
         await this.establishmentService.upsert(establishment)
       } catch (e) {
-        this.logger.error(e)
+        this.logger.warn(
+          { error: e, establishment },
+          'Failed to upsert an establishment during synchronization'
+        )
       }
     })
   }

@@ -1,27 +1,8 @@
-import { TestBed } from '@automock/jest'
-import { FileIOService } from './file-io.service'
 import { Readable } from 'stream'
+import { Data } from './data.class'
 
-describe('File IO Service', () => {
-  let service: FileIOService
-
-  beforeAll(() => {
-    const { unit } = TestBed.create(FileIOService).compile()
-
-    service = unit
-  })
-
-  describe('directoryFrom', () => {
-    it('should return the correct directory path', () => {
-      expect(service.directoryFrom('this/is/a/file.txt')).toBe('this/is/a')
-    })
-
-    it('should handle an empty path', () => {
-      expect(service.directoryFrom('')).toBe('.')
-    })
-  })
-
-  describe('mapLinesFromStream', () => {
+describe('Data Class', () => {
+  describe('mapLines', () => {
     const objectMapper = (line: string) => {
       const values = line.split(',')
       return {
@@ -39,28 +20,24 @@ describe('File IO Service', () => {
     ]
 
     it('should parse data to list of objects', async () => {
-      const result = await service.mapLinesFromStream(objectMapper, Readable.from(data))
+      const result = await new Data(Readable.from(data)).mapLines(objectMapper)
       expect(result).toMatchObject(expectedResult)
     })
 
     it('should handle no newline at the end', async () => {
-      const result = await service.mapLinesFromStream(
-        objectMapper,
-        Readable.from(data.slice(0, -1))
-      )
-
+      const result = await new Data(Readable.from(data.slice(0, -1))).mapLines(objectMapper)
       expect(result).toMatchObject(expectedResult)
     })
 
     it('should allow skipping lines', async () => {
-      const result = await service.mapLinesFromStream(objectMapper, Readable.from(data), {
+      const result = await new Data(Readable.from(data)).mapLines(objectMapper, {
         start: 2
       })
       expect(result).toMatchObject(expectedResult.slice(2))
     })
 
     it('should return nothing when skipping more lines than there are in the file', async () => {
-      const result = await service.mapLinesFromStream(objectMapper, Readable.from(data), {
+      const result = await new Data(Readable.from(data)).mapLines(objectMapper, {
         start: expectedResult.length
       })
       expect(result).toStrictEqual([])
@@ -71,18 +48,16 @@ describe('File IO Service', () => {
         throw new Error('this should be caught')
       }
 
-      const result = await service.mapLinesFromStream(callback, Readable.from(data))
-
+      const result = await new Data(Readable.from(data)).mapLines(callback)
       expect(result).toStrictEqual([])
     })
 
     it('should call callback on error', async () => {
       const callback = jest.fn()
-      await service.mapLinesFromStream(
+      await new Data(Readable.from(data)).mapLines(
         () => {
           throw new Error('this should be caught')
         },
-        Readable.from(data),
         { onError: callback }
       )
 
@@ -90,28 +65,28 @@ describe('File IO Service', () => {
     })
 
     it('should handle negative count', async () => {
-      const result = await service.mapLinesFromStream(objectMapper, Readable.from(data), {
+      const result = await new Data(Readable.from(data)).mapLines(objectMapper, {
         count: -1
       })
       expect(result).toStrictEqual([])
     })
 
     it('should handle count equal to zero', async () => {
-      const result = await service.mapLinesFromStream(objectMapper, Readable.from(data), {
+      const result = await new Data(Readable.from(data)).mapLines(objectMapper, {
         count: 0
       })
       expect(result).toStrictEqual([])
     })
 
     it('should handle positive count', async () => {
-      const result = await service.mapLinesFromStream(objectMapper, Readable.from(data), {
+      const result = await new Data(Readable.from(data)).mapLines(objectMapper, {
         count: 1
       })
       expect(result).toStrictEqual([expectedResult[0]])
     })
 
     it('should handle count with start line', async () => {
-      const result = await service.mapLinesFromStream(objectMapper, Readable.from(data), {
+      const result = await new Data(Readable.from(data)).mapLines(objectMapper, {
         start: 1,
         count: 1
       })

@@ -1,32 +1,23 @@
 import { Injectable } from '@nestjs/common'
 import { Client } from 'basic-ftp'
-import { FileIOService } from './file-io.service'
+import { PendingDownload } from './pending-download.class'
 
 @Injectable()
 export class DataDownloader {
-  constructor(private readonly fileIOService: FileIOService) {}
+  ftp(url: string): PendingDownload {
+    return new PendingDownload(async (path) => {
+      const parsedUrl = new URL(url)
 
-  async downloadFTP(host: string, filename: string, filePath: string): Promise<boolean> {
-    if (this.fileIOService.fileExists(filePath)) {
-      return true
-    }
+      const host = parsedUrl.host
+      const ftpPath = parsedUrl.pathname
 
-    const client = new Client()
-    client.ftp.verbose = true
+      const client = new Client()
 
-    const directory = this.fileIOService.directoryFrom(filePath)
-
-    try {
       await client.access({
         host
       })
 
-      await this.fileIOService.makePathIfNotExists(directory)
-      await client.downloadTo(filePath, filename)
-
-      return true
-    } catch (err) {
-      return false
-    }
+      await client.downloadTo(path, ftpPath)
+    })
   }
 }
