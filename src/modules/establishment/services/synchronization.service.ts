@@ -33,7 +33,7 @@ export class SynchronizationService {
         data.mapLines<Establishment>(
           (line) => {
             const csv = line.split(';')
-            const cnpj: string = JSON.parse(csv[2])
+            const cnpj = JSON.parse(csv[2])
 
             if (cnpj !== this.config.synchronization.maintainerCnpj) {
               return null
