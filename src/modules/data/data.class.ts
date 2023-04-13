@@ -56,4 +56,14 @@ export class Data {
     lines.close()
     return objects
   }
+
+  async toString(): Promise<string> {
+    const chunks = []
+
+    for await (const chunk of this.stream) {
+      chunks.push(Buffer.from(chunk))
+    }
+
+    return Buffer.concat(chunks).toString('utf-8')
+  }
 }

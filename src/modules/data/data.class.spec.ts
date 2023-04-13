@@ -2,6 +2,8 @@ import { Readable } from 'stream'
 import { Data } from './data.class'
 
 describe('Data Class', () => {
+  const data = '10,20,30\n40,50,60\n70,80,90\n'
+
   describe('mapLines', () => {
     const objectMapper = (line: string) => {
       const values = line.split(',')
@@ -12,7 +14,6 @@ describe('Data Class', () => {
       }
     }
 
-    const data = '10,20,30\n40,50,60\n70,80,90\n'
     const expectedResult = [
       { a: 10, b: 20, c: 30 },
       { a: 40, b: 50, c: 60 },
@@ -91,6 +92,13 @@ describe('Data Class', () => {
         count: 1
       })
       expect(result).toStrictEqual([expectedResult[1]])
+    })
+  })
+
+  describe('toString', () => {
+    it('should convert data stream to a string', async () => {
+      const result = await new Data(Readable.from(data)).toString()
+      expect(result).toBe(data)
     })
   })
 })
