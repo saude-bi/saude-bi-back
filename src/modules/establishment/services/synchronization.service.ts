@@ -19,11 +19,13 @@ export class SynchronizationService {
     const paddedMonth = month.toString().padStart(2, '0')
     const filename = `BASE_DE_DADOS_CNES_${year}${paddedMonth}.ZIP`
 
-    this.logger.log('Downloading data')
+    this.logger.log('Downloading establishment data...')
 
     const downloadedFile = await this.dataDownloader
       .ftp(`ftp.datasus.gov.br/cnes/${filename}`)
       .download()
+
+    this.logger.log('Unzipping establishment data and mapping contents...')
 
     const establishments = await downloadedFile
       .unzipped(`tbEstabelecimento${year}${paddedMonth}.csv`)
@@ -48,7 +50,7 @@ export class SynchronizationService {
         )
       )
 
-    this.logger.log({ count: establishments.length }, 'Attempting to synchronize establishments')
+    this.logger.log({ count: establishments.length }, 'Persisting establishments to database...')
     for (const establishment of establishments) {
       try {
         this.logger.verbose({ establishment }, 'Synchronizing establishment via upsert...')
@@ -56,7 +58,7 @@ export class SynchronizationService {
       } catch (e) {
         this.logger.warn(
           { error: e, establishment },
-          'Failed to upsert an establishment during synchronization'
+          'Failed to persist an establishment during synchronization'
         )
       }
     }

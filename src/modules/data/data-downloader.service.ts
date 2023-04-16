@@ -8,7 +8,7 @@ export class DataDownloader {
   constructor(private readonly config: AppConfig) {}
 
   ftp(url: string): PendingDownload {
-    const parsedUrl = new URL(url)
+    const parsedUrl = new URL(`ftp://${url}`)
 
     const host = parsedUrl.host
     const ftpPath = parsedUrl.pathname
