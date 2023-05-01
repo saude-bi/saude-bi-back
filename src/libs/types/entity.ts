@@ -1,12 +1,9 @@
-import { randomUUID } from 'crypto'
 import { PrimaryKey, Property } from '@mikro-orm/core'
 
-export class AbstractEntity {
+export class AuditedEntity {
   @PrimaryKey()
-  id: string = randomUUID()
-}
+  id: number
 
-export class Audited {
   @Property()
   created: Date = new Date()
 

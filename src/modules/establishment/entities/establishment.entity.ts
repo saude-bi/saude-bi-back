@@ -1,9 +1,11 @@
-import { Audited } from '@libs/types/entity'
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core'
+import { AuditedEntity } from '@libs/types/entity'
+import { Entity, Index, Property, Unique } from '@mikro-orm/core'
 
 @Entity()
-export class Establishment extends Audited {
-  @PrimaryKey()
+export class Establishment extends AuditedEntity {
+  @Unique()
+  @Index()
+  @Property()
   cnes: string
 
   @Property()

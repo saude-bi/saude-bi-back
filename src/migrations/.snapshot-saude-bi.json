@@ -6,14 +6,14 @@
   "tables": [
     {
       "columns": {
-        "cnes": {
-          "name": "cnes",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "unsigned": true,
+          "autoincrement": true,
+          "primary": true,
           "nullable": false,
-          "mappedType": "string"
+          "mappedType": "integer"
         },
         "created": {
           "name": "created",
@@ -45,13 +45,13 @@
           "mappedType": "string"
         }
       },
-      "name": "establishment",
+      "name": "category",
       "schema": "public",
       "indexes": [
         {
-          "keyName": "establishment_pkey",
+          "keyName": "category_pkey",
           "columnNames": [
-            "cnes"
+            "id"
           ],
           "composite": false,
           "primary": true,
@@ -63,14 +63,14 @@
     },
     {
       "columns": {
-        "username": {
-          "name": "username",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "unsigned": true,
+          "autoincrement": true,
+          "primary": true,
           "nullable": false,
-          "mappedType": "string"
+          "mappedType": "integer"
         },
         "created": {
           "name": "created",
@@ -91,6 +91,292 @@
           "nullable": false,
           "length": 6,
           "mappedType": "datetime"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "url": {
+          "name": "url",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "credentials_login": {
+          "name": "credentials_login",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        },
+        "credentials_password": {
+          "name": "credentials_password",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
+        }
+      },
+      "name": "dashboard_data_source",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "dashboard_data_source_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "unsigned": true,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "created": {
+          "name": "created",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "updated": {
+          "name": "updated",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "data_source_id": {
+          "name": "data_source_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "category_id": {
+          "name": "category_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "metabase_id": {
+          "name": "metabase_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        }
+      },
+      "name": "dashboard",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "dashboard_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "dashboard_data_source_id_foreign": {
+          "constraintName": "dashboard_data_source_id_foreign",
+          "columnNames": [
+            "data_source_id"
+          ],
+          "localTableName": "public.dashboard",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.dashboard_data_source",
+          "updateRule": "cascade"
+        },
+        "dashboard_category_id_foreign": {
+          "constraintName": "dashboard_category_id_foreign",
+          "columnNames": [
+            "category_id"
+          ],
+          "localTableName": "public.dashboard",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.category",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "unsigned": true,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "created": {
+          "name": "created",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "updated": {
+          "name": "updated",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "cnes": {
+          "name": "cnes",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        }
+      },
+      "name": "establishment",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "cnes"
+          ],
+          "composite": false,
+          "keyName": "establishment_cnes_index",
+          "primary": false,
+          "unique": false
+        },
+        {
+          "columnNames": [
+            "cnes"
+          ],
+          "composite": false,
+          "keyName": "establishment_cnes_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "establishment_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "unsigned": true,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "created": {
+          "name": "created",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "updated": {
+          "name": "updated",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "username": {
+          "name": "username",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
         },
         "password": {
           "name": "password",
@@ -115,9 +401,27 @@
       "schema": "public",
       "indexes": [
         {
-          "keyName": "user_pkey",
           "columnNames": [
             "username"
+          ],
+          "composite": false,
+          "keyName": "user_username_index",
+          "primary": false,
+          "unique": false
+        },
+        {
+          "columnNames": [
+            "username"
+          ],
+          "composite": false,
+          "keyName": "user_username_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "user_pkey",
+          "columnNames": [
+            "id"
           ],
           "composite": false,
           "primary": true,
