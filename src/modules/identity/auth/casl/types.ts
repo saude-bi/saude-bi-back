@@ -1,5 +1,5 @@
 import { InferSubjects, PureAbility } from '@casl/ability'
-import { Establishment } from '@modules/establishment/entities/establishment.entity'
+import { Establishment } from '@modules/health/establishment/entities/establishment.entity'
 import { User } from '@modules/identity/user/entities/user.entity'
 
 export enum Action {

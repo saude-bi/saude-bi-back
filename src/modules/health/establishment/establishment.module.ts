@@ -4,7 +4,7 @@ import { MikroOrmModule } from '@mikro-orm/nestjs'
 import { Establishment } from './entities/establishment.entity'
 import { EstablishmentService } from './services/establishment.service'
 import { SynchronizationService } from './services/synchronization.service'
-import { DataModule } from '@modules/data/data.module'
+import { DataModule } from '@modules/business-intelligence/data/data.module'
 
 @Module({
   controllers: [EstablishmentController],

@@ -4,12 +4,10 @@ import { redisStore } from 'cache-manager-redis-store'
 import { CacheModule, CacheStore } from '@nestjs/cache-manager'
 import { IdentityModule } from '@modules/identity/identity.module'
 import { MikroOrmModule } from '@mikro-orm/nestjs'
-import { EstablishmentModule } from '@modules/establishment/establishment.module'
-import { DataModule } from '@modules/data/data.module'
 import { AppConfigModule } from '@modules/app-config/app-config.module'
 import { AppConfig } from '@modules/app-config/app-config.service'
-import { DataSourceModule } from '@modules/data-source/data-source.module'
-import { DashboardModule } from '@modules/dashboard/dashboard.module'
+import { HealthModule } from '@modules/health/health.module'
+import { BusinessIntelligenceModule } from '@modules/business-intelligence/business-intelligence.module'
 
 const helperModules = [
   AppConfigModule,
@@ -42,13 +40,6 @@ const helperModules = [
 ]
 
 @Module({
-  imports: [
-    ...helperModules,
-    IdentityModule,
-    DataSourceModule,
-    DashboardModule,
-    EstablishmentModule,
-    DataModule
-  ]
+  imports: [...helperModules, IdentityModule, HealthModule, BusinessIntelligenceModule]
 })
 export class AppModule {}

@@ -1,6 +1,6 @@
 import { AuditedEntity } from '@libs/types/entity'
 import { Collection, Embeddable, Embedded, Entity, OneToMany, Property } from '@mikro-orm/core'
-import { Dashboard } from '@modules/dashboard/entities/dashboard.entity'
+import { Dashboard } from '@modules/business-intelligence/dashboard/entities/dashboard.entity'
 
 @Embeddable()
 export class DataSourceCredentials {

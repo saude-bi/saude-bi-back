@@ -10,9 +10,9 @@ import {
   Property,
   Unique
 } from '@mikro-orm/core'
-import { Establishment } from '@modules/establishment/entities/establishment.entity'
+import { Establishment } from '@modules/health/establishment/entities/establishment.entity'
+import { Occupation } from '@modules/health/occupations/entities/occupation.entity'
 import { User } from '@modules/identity/user/entities/user.entity'
-import { Occupation } from '@modules/occupations/entities/occupation.entity'
 
 type Gender = 'male' | 'female' | 'other'
 

@@ -1,9 +1,9 @@
-import { DataDownloader } from '@modules/data/data-downloader.service'
 import { Injectable, Logger } from '@nestjs/common'
 import { plainToInstance } from 'class-transformer'
 import { Establishment } from '../entities/establishment.entity'
 import { EstablishmentService } from './establishment.service'
 import { AppConfig } from '@modules/app-config/app-config.service'
+import { DataDownloader } from '@modules/business-intelligence/data/data-downloader.service'
 
 @Injectable()
 export class SynchronizationService {

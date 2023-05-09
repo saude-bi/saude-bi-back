@@ -1,7 +1,7 @@
 import { AuditedEntity } from '@libs/types/entity'
 import { Entity, ManyToOne, Property } from '@mikro-orm/core'
-import { Category } from '@modules/category/entities/category.entity'
-import { DashboardDataSource } from '@modules/data-source/entities/data-source.entity'
+import { Category } from '@modules/business-intelligence/category/entities/category.entity'
+import { DashboardDataSource } from '@modules/business-intelligence/data-source/entities/data-source.entity'
 
 @Entity()
 export class Dashboard extends AuditedEntity {
