@@ -1,5 +1,7 @@
 {
-  "namespaces": ["public"],
+  "namespaces": [
+    "public"
+  ],
   "name": "public",
   "tables": [
     {
@@ -48,7 +50,9 @@
       "indexes": [
         {
           "keyName": "category_pkey",
-          "columnNames": ["id"],
+          "columnNames": [
+            "id"
+          ],
           "composite": false,
           "primary": true,
           "unique": true
@@ -130,7 +134,9 @@
       "indexes": [
         {
           "keyName": "dashboard_data_source_pkey",
-          "columnNames": ["id"],
+          "columnNames": [
+            "id"
+          ],
           "composite": false,
           "primary": true,
           "unique": true
@@ -212,7 +218,9 @@
       "indexes": [
         {
           "keyName": "dashboard_pkey",
-          "columnNames": ["id"],
+          "columnNames": [
+            "id"
+          ],
           "composite": false,
           "primary": true,
           "unique": true
@@ -222,17 +230,25 @@
       "foreignKeys": {
         "dashboard_data_source_id_foreign": {
           "constraintName": "dashboard_data_source_id_foreign",
-          "columnNames": ["data_source_id"],
+          "columnNames": [
+            "data_source_id"
+          ],
           "localTableName": "public.dashboard",
-          "referencedColumnNames": ["id"],
+          "referencedColumnNames": [
+            "id"
+          ],
           "referencedTableName": "public.dashboard_data_source",
           "updateRule": "cascade"
         },
         "dashboard_category_id_foreign": {
           "constraintName": "dashboard_category_id_foreign",
-          "columnNames": ["category_id"],
+          "columnNames": [
+            "category_id"
+          ],
           "localTableName": "public.dashboard",
-          "referencedColumnNames": ["id"],
+          "referencedColumnNames": [
+            "id"
+          ],
           "referencedTableName": "public.category",
           "updateRule": "cascade"
         }
@@ -292,14 +308,18 @@
       "schema": "public",
       "indexes": [
         {
-          "columnNames": ["cnes"],
+          "columnNames": [
+            "cnes"
+          ],
           "composite": false,
           "keyName": "establishment_cnes_index",
           "primary": false,
           "unique": false
         },
         {
-          "columnNames": ["cnes"],
+          "columnNames": [
+            "cnes"
+          ],
           "composite": false,
           "keyName": "establishment_cnes_unique",
           "primary": false,
@@ -307,7 +327,9 @@
         },
         {
           "keyName": "establishment_pkey",
-          "columnNames": ["id"],
+          "columnNames": [
+            "id"
+          ],
           "composite": false,
           "primary": true,
           "unique": true
@@ -346,14 +368,52 @@
           "nullable": false,
           "length": 6,
           "mappedType": "datetime"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "cbo": {
+          "name": "cbo",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
         }
       },
       "name": "occupation",
       "schema": "public",
       "indexes": [
         {
+          "columnNames": [
+            "cbo"
+          ],
+          "composite": false,
+          "keyName": "occupation_cbo_index",
+          "primary": false,
+          "unique": false
+        },
+        {
+          "columnNames": [
+            "cbo"
+          ],
+          "composite": false,
+          "keyName": "occupation_cbo_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
           "keyName": "occupation_pkey",
-          "columnNames": ["id"],
+          "columnNames": [
+            "id"
+          ],
           "composite": false,
           "primary": true,
           "unique": true
@@ -425,14 +485,18 @@
       "schema": "public",
       "indexes": [
         {
-          "columnNames": ["username"],
+          "columnNames": [
+            "username"
+          ],
           "composite": false,
           "keyName": "user_username_index",
           "primary": false,
           "unique": false
         },
         {
-          "columnNames": ["username"],
+          "columnNames": [
+            "username"
+          ],
           "composite": false,
           "keyName": "user_username_unique",
           "primary": false,
@@ -440,7 +504,9 @@
         },
         {
           "keyName": "user_pkey",
-          "columnNames": ["id"],
+          "columnNames": [
+            "id"
+          ],
           "composite": false,
           "primary": true,
           "unique": true
@@ -530,21 +596,27 @@
       "schema": "public",
       "indexes": [
         {
-          "columnNames": ["user_id"],
+          "columnNames": [
+            "user_id"
+          ],
           "composite": false,
           "keyName": "medical_worker_user_id_unique",
           "primary": false,
           "unique": true
         },
         {
-          "columnNames": ["cns"],
+          "columnNames": [
+            "cns"
+          ],
           "composite": false,
           "keyName": "medical_worker_cns_index",
           "primary": false,
           "unique": false
         },
         {
-          "columnNames": ["cns"],
+          "columnNames": [
+            "cns"
+          ],
           "composite": false,
           "keyName": "medical_worker_cns_unique",
           "primary": false,
@@ -552,7 +624,9 @@
         },
         {
           "keyName": "medical_worker_pkey",
-          "columnNames": ["id"],
+          "columnNames": [
+            "id"
+          ],
           "composite": false,
           "primary": true,
           "unique": true
@@ -562,9 +636,13 @@
       "foreignKeys": {
         "medical_worker_user_id_foreign": {
           "constraintName": "medical_worker_user_id_foreign",
-          "columnNames": ["user_id"],
+          "columnNames": [
+            "user_id"
+          ],
           "localTableName": "public.medical_worker",
-          "referencedColumnNames": ["id"],
+          "referencedColumnNames": [
+            "id"
+          ],
           "referencedTableName": "public.user",
           "updateRule": "cascade"
         }
@@ -620,12 +698,14 @@
           "mappedType": "integer"
         }
       },
-      "name": "worker_occupation",
+      "name": "work_relation",
       "schema": "public",
       "indexes": [
         {
-          "keyName": "worker_occupation_pkey",
-          "columnNames": ["id"],
+          "keyName": "work_relation_pkey",
+          "columnNames": [
+            "id"
+          ],
           "composite": false,
           "primary": true,
           "unique": true
@@ -633,19 +713,27 @@
       ],
       "checks": [],
       "foreignKeys": {
-        "worker_occupation_worker_id_foreign": {
-          "constraintName": "worker_occupation_worker_id_foreign",
-          "columnNames": ["worker_id"],
-          "localTableName": "public.worker_occupation",
-          "referencedColumnNames": ["id"],
+        "work_relation_worker_id_foreign": {
+          "constraintName": "work_relation_worker_id_foreign",
+          "columnNames": [
+            "worker_id"
+          ],
+          "localTableName": "public.work_relation",
+          "referencedColumnNames": [
+            "id"
+          ],
           "referencedTableName": "public.medical_worker",
           "updateRule": "cascade"
         },
-        "worker_occupation_occupation_id_foreign": {
-          "constraintName": "worker_occupation_occupation_id_foreign",
-          "columnNames": ["occupation_id"],
-          "localTableName": "public.worker_occupation",
-          "referencedColumnNames": ["id"],
+        "work_relation_occupation_id_foreign": {
+          "constraintName": "work_relation_occupation_id_foreign",
+          "columnNames": [
+            "occupation_id"
+          ],
+          "localTableName": "public.work_relation",
+          "referencedColumnNames": [
+            "id"
+          ],
           "referencedTableName": "public.occupation",
           "updateRule": "cascade"
         }
@@ -653,8 +741,8 @@
     },
     {
       "columns": {
-        "worker_occupation_id": {
-          "name": "worker_occupation_id",
+        "work_relation_id": {
+          "name": "work_relation_id",
           "type": "int",
           "unsigned": false,
           "autoincrement": false,
@@ -672,12 +760,15 @@
           "mappedType": "integer"
         }
       },
-      "name": "work_relation",
+      "name": "working_establishment",
       "schema": "public",
       "indexes": [
         {
-          "keyName": "work_relation_pkey",
-          "columnNames": ["worker_occupation_id", "establishment_id"],
+          "keyName": "working_establishment_pkey",
+          "columnNames": [
+            "work_relation_id",
+            "establishment_id"
+          ],
           "composite": true,
           "primary": true,
           "unique": true
@@ -685,19 +776,27 @@
       ],
       "checks": [],
       "foreignKeys": {
-        "work_relation_worker_occupation_id_foreign": {
-          "constraintName": "work_relation_worker_occupation_id_foreign",
-          "columnNames": ["worker_occupation_id"],
-          "localTableName": "public.work_relation",
-          "referencedColumnNames": ["id"],
-          "referencedTableName": "public.worker_occupation",
+        "working_establishment_work_relation_id_foreign": {
+          "constraintName": "working_establishment_work_relation_id_foreign",
+          "columnNames": [
+            "work_relation_id"
+          ],
+          "localTableName": "public.working_establishment",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.work_relation",
           "updateRule": "cascade"
         },
-        "work_relation_establishment_id_foreign": {
-          "constraintName": "work_relation_establishment_id_foreign",
-          "columnNames": ["establishment_id"],
-          "localTableName": "public.work_relation",
-          "referencedColumnNames": ["id"],
+        "working_establishment_establishment_id_foreign": {
+          "constraintName": "working_establishment_establishment_id_foreign",
+          "columnNames": [
+            "establishment_id"
+          ],
+          "localTableName": "public.working_establishment",
+          "referencedColumnNames": [
+            "id"
+          ],
           "referencedTableName": "public.establishment",
           "updateRule": "cascade"
         }
