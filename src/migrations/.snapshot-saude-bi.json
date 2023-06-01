@@ -377,6 +377,63 @@
           "primary": false,
           "nullable": false,
           "mappedType": "string"
+        }
+      },
+      "name": "occupation_category",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "occupation_category_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "unsigned": true,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "created": {
+          "name": "created",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "updated": {
+          "name": "updated",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
         },
         "cbo": {
           "name": "cbo",
@@ -386,6 +443,15 @@
           "primary": false,
           "nullable": false,
           "mappedType": "string"
+        },
+        "category_id": {
+          "name": "category_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
         }
       },
       "name": "occupation",
@@ -420,7 +486,20 @@
         }
       ],
       "checks": [],
-      "foreignKeys": {}
+      "foreignKeys": {
+        "occupation_category_id_foreign": {
+          "constraintName": "occupation_category_id_foreign",
+          "columnNames": [
+            "category_id"
+          ],
+          "localTableName": "public.occupation",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.occupation_category",
+          "updateRule": "cascade"
+        }
+      }
     },
     {
       "columns": {

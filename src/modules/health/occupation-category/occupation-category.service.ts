@@ -1,28 +1,54 @@
+import { PaginationQuery, PaginationResponse } from '@libs/types/pagination'
+import { getPaginationOptions } from '@libs/utils/pagination.utils'
+import { EntityRepository, wrap } from '@mikro-orm/core'
+import { InjectRepository } from '@mikro-orm/nestjs'
 import { Injectable } from '@nestjs/common'
 import { CreateOccupationCategoryDto } from './dto/create-occupation-category.dto'
 import { UpdateOccupationCategoryDto } from './dto/update-occupation-category.dto'
+import { OccupationCategory } from './entities/occupation-category.entity'
 
 @Injectable()
 export class OccupationCategoryService {
-  create(createOccupationCategoryDto: CreateOccupationCategoryDto) {
-    console.log(createOccupationCategoryDto)
-    return 'This action adds a new occupationCategory'
+  constructor(
+    @InjectRepository(OccupationCategory)
+    private readonly occupationCategoryRepository: EntityRepository<OccupationCategory>
+  ) {}
+
+  async create(occupationCategory: CreateOccupationCategoryDto): Promise<OccupationCategory> {
+    const newOccupationCategory = this.occupationCategoryRepository.create(occupationCategory)
+    await this.occupationCategoryRepository.persistAndFlush(newOccupationCategory)
+
+    return newOccupationCategory
   }
 
-  findAll() {
-    return `This action returns all occupationCategory`
+  async findOne(id: number): Promise<OccupationCategory> {
+    return await this.occupationCategoryRepository.findOne({ id })
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} occupationCategory`
+  async findAll(query: PaginationQuery): Promise<PaginationResponse<OccupationCategory>> {
+    const [result, total] = await this.occupationCategoryRepository.findAndCount(
+      {},
+      getPaginationOptions(query)
+    )
+
+    return new PaginationResponse(query, total, result)
   }
 
-  update(id: number, updateOccupationCategoryDto: UpdateOccupationCategoryDto) {
-    console.log(updateOccupationCategoryDto)
-    return `This action updates a #${id} occupationCategory`
+  async update(
+    id: number,
+    updatedOccupationCategory: UpdateOccupationCategoryDto
+  ): Promise<OccupationCategory> {
+    const existingOccupationCategory = await this.findOne(id)
+    wrap(existingOccupationCategory).assign(updatedOccupationCategory)
+
+    await this.occupationCategoryRepository.persistAndFlush(existingOccupationCategory)
+    return existingOccupationCategory
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} occupationCategory`
+  async remove(id: number): Promise<boolean> {
+    const occupationCategory = await this.findOne(id)
+    await this.occupationCategoryRepository.removeAndFlush(occupationCategory)
+
+    return !!occupationCategory
   }
 }
