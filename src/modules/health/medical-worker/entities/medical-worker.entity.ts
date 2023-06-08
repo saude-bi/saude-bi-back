@@ -14,7 +14,7 @@ import { Establishment } from '@modules/health/establishment/entities/establishm
 import { Occupation } from '@modules/health/occupation/entities/occupation.entity'
 import { User } from '@modules/identity/user/entities/user.entity'
 
-type Gender = 'male' | 'female' | 'other'
+export type Gender = 'male' | 'female' | 'other'
 
 @Entity()
 export class MedicalWorker extends AuditedEntity {
