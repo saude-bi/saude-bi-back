@@ -45,11 +45,11 @@
           "mappedType": "string"
         }
       },
-      "name": "category",
+      "name": "dashboard_category",
       "schema": "public",
       "indexes": [
         {
-          "keyName": "category_pkey",
+          "keyName": "dashboard_category_pkey",
           "columnNames": [
             "id"
           ],
@@ -249,7 +249,7 @@
           "referencedColumnNames": [
             "id"
           ],
-          "referencedTableName": "public.category",
+          "referencedTableName": "public.dashboard_category",
           "updateRule": "cascade"
         }
       }

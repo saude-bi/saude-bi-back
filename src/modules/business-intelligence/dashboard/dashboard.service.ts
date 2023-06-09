@@ -2,7 +2,7 @@ import { PaginationQuery, PaginationResponse } from '@libs/types/pagination'
 import { getPaginationOptions } from '@libs/utils/pagination.utils'
 import { EntityRepository, wrap } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
-import { CategoryService } from '@modules/business-intelligence/category/category.service'
+import { DashboardCategoryService } from '@modules/business-intelligence/dashboard-category/dashboard-category.service'
 import { DataSourceService } from '@modules/business-intelligence/data-source/data-source.service'
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { CreateDashboardDto } from './dto/create-dashboard.dto'
@@ -15,7 +15,7 @@ export class DashboardService {
     @InjectRepository(Dashboard)
     private readonly dashboardRepository: EntityRepository<Dashboard>,
     private readonly dataSourceService: DataSourceService,
-    private readonly categoryService: CategoryService
+    private readonly dashboardCategoryService: DashboardCategoryService
   ) {}
 
   async create(dashboard: CreateDashboardDto): Promise<Dashboard> {
@@ -24,7 +24,7 @@ export class DashboardService {
       throw new BadRequestException(`Could not find data source with id ${dashboard.dataSource}`)
     }
 
-    const category = await this.categoryService.findOne(dashboard.category)
+    const category = await this.dashboardCategoryService.findOne(dashboard.category)
     if (!category) {
       throw new BadRequestException(`Could not find category with id ${dashboard.category}`)
     }

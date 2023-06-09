@@ -13,8 +13,10 @@ import { OccupationCategoryService } from './occupation-category.service'
 import { CreateOccupationCategoryDto } from './dto/create-occupation-category.dto'
 import { UpdateOccupationCategoryDto } from './dto/update-occupation-category.dto'
 import { PaginationQuery } from '@libs/types/pagination'
+import { ApiTags } from '@nestjs/swagger'
 
 @Controller('occupation-categories')
+@ApiTags('Occupation Category')
 export class OccupationCategoryController {
   constructor(private readonly occupationCategoryService: OccupationCategoryService) {}
 

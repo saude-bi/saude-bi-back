@@ -1,9 +1,9 @@
 import { Migration } from '@mikro-orm/migrations';
 
-export class Migration20230526223838 extends Migration {
+export class Migration20230609153007 extends Migration {
 
   async up(): Promise<void> {
-    this.addSql('create table "category" ("id" serial primary key, "created" timestamptz(0) not null, "updated" timestamptz(0) not null, "name" varchar(255) not null);');
+    this.addSql('create table "dashboard_category" ("id" serial primary key, "created" timestamptz(0) not null, "updated" timestamptz(0) not null, "name" varchar(255) not null);');
 
     this.addSql('create table "dashboard_data_source" ("id" serial primary key, "created" timestamptz(0) not null, "updated" timestamptz(0) not null, "name" varchar(255) not null, "url" varchar(255) not null, "credentials_login" varchar(255) null, "credentials_password" varchar(255) null);');
 
@@ -13,7 +13,9 @@ export class Migration20230526223838 extends Migration {
     this.addSql('create index "establishment_cnes_index" on "establishment" ("cnes");');
     this.addSql('alter table "establishment" add constraint "establishment_cnes_unique" unique ("cnes");');
 
-    this.addSql('create table "occupation" ("id" serial primary key, "created" timestamptz(0) not null, "updated" timestamptz(0) not null, "name" varchar(255) not null, "cbo" varchar(255) not null);');
+    this.addSql('create table "occupation_category" ("id" serial primary key, "created" timestamptz(0) not null, "updated" timestamptz(0) not null, "name" varchar(255) not null);');
+
+    this.addSql('create table "occupation" ("id" serial primary key, "created" timestamptz(0) not null, "updated" timestamptz(0) not null, "name" varchar(255) not null, "cbo" varchar(255) not null, "category_id" int not null);');
     this.addSql('create index "occupation_cbo_index" on "occupation" ("cbo");');
     this.addSql('alter table "occupation" add constraint "occupation_cbo_unique" unique ("cbo");');
 
@@ -31,7 +33,9 @@ export class Migration20230526223838 extends Migration {
     this.addSql('create table "working_establishment" ("work_relation_id" int not null, "establishment_id" int not null, constraint "working_establishment_pkey" primary key ("work_relation_id", "establishment_id"));');
 
     this.addSql('alter table "dashboard" add constraint "dashboard_data_source_id_foreign" foreign key ("data_source_id") references "dashboard_data_source" ("id") on update cascade;');
-    this.addSql('alter table "dashboard" add constraint "dashboard_category_id_foreign" foreign key ("category_id") references "category" ("id") on update cascade;');
+    this.addSql('alter table "dashboard" add constraint "dashboard_category_id_foreign" foreign key ("category_id") references "dashboard_category" ("id") on update cascade;');
+
+    this.addSql('alter table "occupation" add constraint "occupation_category_id_foreign" foreign key ("category_id") references "occupation_category" ("id") on update cascade;');
 
     this.addSql('alter table "medical_worker" add constraint "medical_worker_user_id_foreign" foreign key ("user_id") references "user" ("id") on update cascade;');
 
@@ -40,40 +44,6 @@ export class Migration20230526223838 extends Migration {
 
     this.addSql('alter table "working_establishment" add constraint "working_establishment_work_relation_id_foreign" foreign key ("work_relation_id") references "work_relation" ("id") on update cascade;');
     this.addSql('alter table "working_establishment" add constraint "working_establishment_establishment_id_foreign" foreign key ("establishment_id") references "establishment" ("id") on update cascade;');
-  }
-
-  async down(): Promise<void> {
-    this.addSql('alter table "dashboard" drop constraint "dashboard_category_id_foreign";');
-
-    this.addSql('alter table "dashboard" drop constraint "dashboard_data_source_id_foreign";');
-
-    this.addSql('alter table "working_establishment" drop constraint "working_establishment_establishment_id_foreign";');
-
-    this.addSql('alter table "work_relation" drop constraint "work_relation_occupation_id_foreign";');
-
-    this.addSql('alter table "medical_worker" drop constraint "medical_worker_user_id_foreign";');
-
-    this.addSql('alter table "work_relation" drop constraint "work_relation_worker_id_foreign";');
-
-    this.addSql('alter table "working_establishment" drop constraint "working_establishment_work_relation_id_foreign";');
-
-    this.addSql('drop table if exists "category" cascade;');
-
-    this.addSql('drop table if exists "dashboard_data_source" cascade;');
-
-    this.addSql('drop table if exists "dashboard" cascade;');
-
-    this.addSql('drop table if exists "establishment" cascade;');
-
-    this.addSql('drop table if exists "occupation" cascade;');
-
-    this.addSql('drop table if exists "user" cascade;');
-
-    this.addSql('drop table if exists "medical_worker" cascade;');
-
-    this.addSql('drop table if exists "work_relation" cascade;');
-
-    this.addSql('drop table if exists "working_establishment" cascade;');
   }
 
 }

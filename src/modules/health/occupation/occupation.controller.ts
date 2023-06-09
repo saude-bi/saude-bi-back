@@ -14,8 +14,10 @@ import { OccupationService } from './occupation.service'
 import { CreateOccupationDto } from './dto/create-occupation.dto'
 import { UpdateOccupationDto } from './dto/update-occupation.dto'
 import { PaginationQuery } from '@libs/types/pagination'
+import { ApiTags } from '@nestjs/swagger'
 
-@Controller('occupation')
+@Controller('occupations')
+@ApiTags('Occupation')
 export class OccupationController {
   constructor(private readonly occupationService: OccupationService) {}
 

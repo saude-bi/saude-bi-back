@@ -16,7 +16,7 @@ import { DashboardService } from './dashboard.service'
 import { CreateDashboardDto } from './dto/create-dashboard.dto'
 import { UpdateDashboardDto } from './dto/update-dashboard.dto'
 
-@Controller('dashboard')
+@Controller('dashboards')
 @ApiTags('Dashboard')
 export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}

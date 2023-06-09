@@ -16,7 +16,7 @@ import { DataSourceService } from './data-source.service'
 import { CreateDataSourceDto } from './dto/create-data-source.dto'
 import { UpdateDataSourceDto } from './dto/update-data-source.dto'
 
-@Controller('data-source')
+@Controller('data-sources')
 @ApiTags('Data Source')
 export class DataSourceController {
   constructor(private readonly dataSourceService: DataSourceService) {}

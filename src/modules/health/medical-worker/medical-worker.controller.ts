@@ -14,8 +14,10 @@ import { MedicalWorkerService } from './medical-worker.service'
 import { CreateMedicalWorkerDto } from './dto/create-medical-worker.dto'
 import { UpdateMedicalWorkerDto } from './dto/update-medical-worker.dto'
 import { PaginationQuery } from '@libs/types/pagination'
+import { ApiTags } from '@nestjs/swagger'
 
-@Controller('medical-worker')
+@Controller('medical-workers')
+@ApiTags('Medical Worker')
 export class MedicalWorkerController {
   constructor(private readonly medicalWorkerService: MedicalWorkerService) {}
 
