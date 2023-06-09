@@ -7,6 +7,7 @@ import { MikroOrmModule } from '@mikro-orm/nestjs'
 @Module({
   controllers: [OccupationCategoryController],
   providers: [OccupationCategoryService],
-  imports: [MikroOrmModule.forFeature([OccupationCategory])]
+  imports: [MikroOrmModule.forFeature([OccupationCategory])],
+  exports: [OccupationCategoryService]
 })
 export class OccupationCategoryModule {}
