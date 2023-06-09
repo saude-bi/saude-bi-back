@@ -1,34 +1,52 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ParseIntPipe,
+  Query,
+  NotFoundException
+} from '@nestjs/common'
 import { MedicalWorkerService } from './medical-worker.service'
 import { CreateMedicalWorkerDto } from './dto/create-medical-worker.dto'
 import { UpdateMedicalWorkerDto } from './dto/update-medical-worker.dto'
+import { PaginationQuery } from '@libs/types/pagination'
 
 @Controller('medical-worker')
 export class MedicalWorkerController {
   constructor(private readonly medicalWorkerService: MedicalWorkerService) {}
 
   @Post()
-  create(@Body() createMedicalWorkerDto: CreateMedicalWorkerDto) {
-    return this.medicalWorkerService.create(createMedicalWorkerDto)
+  async create(@Body() createMedicalWorkerDto: CreateMedicalWorkerDto) {
+    return await this.medicalWorkerService.create(createMedicalWorkerDto)
   }
 
   @Get()
-  findAll() {
-    return this.medicalWorkerService.findAll()
+  async findAll(@Query() query: PaginationQuery) {
+    return await this.medicalWorkerService.findAll(query)
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.medicalWorkerService.findOne(+id)
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return await this.medicalWorkerService.findOne(id)
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMedicalWorkerDto: UpdateMedicalWorkerDto) {
-    return this.medicalWorkerService.update(+id, updateMedicalWorkerDto)
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateMedicalWorkerDto: UpdateMedicalWorkerDto
+  ) {
+    return await this.medicalWorkerService.update(id, updateMedicalWorkerDto)
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.medicalWorkerService.remove(+id)
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    const couldRemove = await this.medicalWorkerService.remove(id)
+    if (!couldRemove) {
+      throw new NotFoundException()
+    }
   }
 }
