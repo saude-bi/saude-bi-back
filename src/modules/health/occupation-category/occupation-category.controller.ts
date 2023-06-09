@@ -12,8 +12,8 @@ import {
 import { OccupationCategoryService } from './occupation-category.service'
 import { CreateOccupationCategoryDto } from './dto/create-occupation-category.dto'
 import { UpdateOccupationCategoryDto } from './dto/update-occupation-category.dto'
-import { PaginationQuery } from '@libs/types/pagination'
 import { ApiTags } from '@nestjs/swagger'
+import { OccupationCategoryFindAllQuery } from './dto/occupation-category-filters.dto'
 
 @Controller('occupation-categories')
 @ApiTags('Occupation Category')
@@ -26,7 +26,7 @@ export class OccupationCategoryController {
   }
 
   @Get()
-  findAll(@Query() query: PaginationQuery) {
+  findAll(@Query() query: OccupationCategoryFindAllQuery) {
     return this.occupationCategoryService.findAll(query)
   }
 
