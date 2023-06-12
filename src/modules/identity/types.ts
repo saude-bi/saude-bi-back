@@ -1,5 +1,6 @@
 export type UserInfo = {
   username: string
+  isAdmin: boolean
 }
 
 export interface RequestWithUser extends Request {
