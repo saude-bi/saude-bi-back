@@ -20,7 +20,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
 import { CreateUserDto } from './dto/create-user.dto'
 import { User } from './entities/user.entity'
 import { UserService } from './user.service'
-import { UserFindAllQuery } from './dto/user_filters.dto'
+import { UserFindAllQuery } from './dto/user-filters.dto'
 
 @ApiTags('Identity')
 @Controller('users')

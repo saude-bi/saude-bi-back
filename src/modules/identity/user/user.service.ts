@@ -7,7 +7,7 @@ import { hash } from 'bcrypt'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { User } from './entities/user.entity'
-import { UserFindAllQuery } from './dto/user_filters.dto'
+import { UserFindAllQuery } from './dto/user-filters.dto'
 
 @Injectable()
 export class UserService {
