@@ -7,6 +7,7 @@ import { hash } from 'bcrypt'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { User } from './entities/user.entity'
+import { UserFindAllQuery } from './dto/user_filters.dto'
 
 @Injectable()
 export class UserService {
@@ -27,8 +28,11 @@ export class UserService {
     return await this.userRepository.findOne({ username })
   }
 
-  async findAll(query: PaginationQuery): Promise<PaginationResponse<User>> {
-    const [result, total] = await this.userRepository.findAndCount({}, getPaginationOptions(query))
+  async findAll(query: UserFindAllQuery): Promise<PaginationResponse<User>> {
+    const [result, total] = await this.userRepository.findAndCount(
+      { username: new RegExp(query.username, 'i') },
+      getPaginationOptions(query)
+    )
     return new PaginationResponse(query, total, result)
   }
 

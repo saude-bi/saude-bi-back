@@ -9,6 +9,7 @@ import {
   NotFoundException,
   Param,
   Post,
+  Query,
   UseGuards
 } from '@nestjs/common'
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
@@ -19,6 +20,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
 import { CreateUserDto } from './dto/create-user.dto'
 import { User } from './entities/user.entity'
 import { UserService } from './user.service'
+import { UserFindAllQuery } from './dto/user_filters.dto'
 
 @ApiTags('Identity')
 @Controller('users')
@@ -42,6 +44,11 @@ export class UserController {
     }
 
     return user
+  }
+
+  @Get()
+  findAll(@Query() query: UserFindAllQuery) {
+    return this.userService.findAll(query)
   }
 
   @Post()
