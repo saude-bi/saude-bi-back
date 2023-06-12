@@ -15,8 +15,7 @@ export class UserService {
   async create(user: CreateUserDto): Promise<User> {
     const newUser = this.userRepository.create({
       ...user,
-      password: await hash(user.password, 10),
-      isAdmin: false
+      password: await hash(user.password, 10)
     })
 
     await this.userRepository.persistAndFlush(newUser)

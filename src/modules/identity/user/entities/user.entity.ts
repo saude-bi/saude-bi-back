@@ -14,6 +14,6 @@ export class User extends AuditedEntity {
   @Exclude()
   password: string
 
-  @Property()
+  @Property({ default: false })
   isAdmin: boolean
 }

@@ -1,3 +1,4 @@
+import { Optional } from '@nestjs/common'
 import { IsBoolean, IsString, MinLength, NotContains } from 'class-validator'
 
 export class CreateUserDto {
@@ -12,5 +13,6 @@ export class CreateUserDto {
   password: string
 
   @IsBoolean()
-  isAdmin: boolean
+  @Optional()
+  isAdmin?: boolean = false
 }
