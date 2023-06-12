@@ -1,4 +1,4 @@
-import { IsString, MinLength, NotContains } from 'class-validator'
+import { IsBoolean, IsString, MinLength, NotContains } from 'class-validator'
 
 export class CreateUserDto {
   @IsString()
@@ -10,4 +10,7 @@ export class CreateUserDto {
   @MinLength(5)
   @NotContains(' ')
   password: string
+
+  @IsBoolean()
+  isAdmin: boolean
 }
