@@ -18,7 +18,7 @@ export type Gender = 'male' | 'female' | 'other'
 
 @Entity()
 export class MedicalWorker extends AuditedEntity {
-  @OneToOne()
+  @OneToOne({ eager: true })
   user: User
 
   @Property()
