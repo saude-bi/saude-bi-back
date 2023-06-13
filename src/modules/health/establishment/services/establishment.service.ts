@@ -30,12 +30,17 @@ export class EstablishmentService {
     return new PaginationResponse(query, total, result)
   }
 
-  async findOne(cnes: string) {
+  async findOne(id: number) {
+    return await this.establishmentRepository.findOne({ id })
+  }
+
+
+  async findOneByCnes(cnes: string) {
     return await this.establishmentRepository.findOne({ cnes })
   }
 
-  async update(cnes: string, updated: UpdateEstablishmentDto) {
-    const existing = await this.findOne(cnes)
+  async update(id: number, updated: UpdateEstablishmentDto) {
+    const existing = await this.findOne(id)
     wrap(existing).assign(updated)
 
     await this.establishmentRepository.persistAndFlush(existing)
@@ -44,9 +49,10 @@ export class EstablishmentService {
 
   async upsert(establishment: CreateEstablishmentDto) {
     const cnes = establishment.cnes
+    const found = await this.findOneByCnes(cnes);
 
-    if (this.findOne(cnes)) {
-      this.update(cnes, establishment)
+    if (found) {
+      this.update(found.id, establishment)
     } else {
       this.create(establishment)
     }
@@ -54,8 +60,8 @@ export class EstablishmentService {
     await this.establishmentRepository.upsert(establishment)
   }
 
-  async remove(cnes: string) {
-    const user = await this.findOne(cnes)
+  async remove(id: number) {
+    const user = await this.findOne(id)
     await this.establishmentRepository.removeAndFlush(user)
 
     return !!user

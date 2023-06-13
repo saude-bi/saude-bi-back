@@ -9,7 +9,8 @@ import {
   UseGuards,
   NotFoundException,
   Query,
-  Put
+  Put,
+  ParseIntPipe
 } from '@nestjs/common'
 import { CreateEstablishmentDto } from './dto/create-establishment.dto'
 import { UpdateEstablishmentDto } from './dto/update-establishment.dto'
@@ -46,9 +47,9 @@ export class EstablishmentController {
   }
 
   @CheckPolicies((ability) => ability.can(Action.Read, Establishment))
-  @Get(':cnes')
-  async findOne(@Param('cnes') cnes: string) {
-    const establishment = await this.establishmentService.findOne(cnes)
+  @Get(':id')
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    const establishment = await this.establishmentService.findOne(id)
 
     if (!establishment) {
       throw new NotFoundException()
@@ -58,18 +59,18 @@ export class EstablishmentController {
   }
 
   @CheckPolicies((ability) => ability.can(Action.Update, Establishment))
-  @Patch(':cnes')
+  @Patch(':id')
   async update(
-    @Param('cnes') cnes: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateEstablishmentDto: UpdateEstablishmentDto
   ) {
-    return await this.establishmentService.update(cnes, updateEstablishmentDto)
+    return await this.establishmentService.update(id, updateEstablishmentDto)
   }
 
   @CheckPolicies((ability) => ability.can(Action.Delete, Establishment))
-  @Delete(':cnes')
-  async remove(@Param('cnes') cnes: string) {
-    const couldRemove = await this.establishmentService.remove(cnes)
+  @Delete(':id')
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    const couldRemove = await this.establishmentService.remove(id)
     if (!couldRemove) {
       throw new NotFoundException()
     }
