@@ -12,6 +12,6 @@ export class Occupation extends AuditedEntity {
   @Property()
   cbo: string
 
-  @ManyToOne({ eager: true })
+  @ManyToOne({ entity: () => OccupationCategory, eager: true })
   category: OccupationCategory
 }

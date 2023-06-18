@@ -15,6 +15,7 @@ import { CreateMedicalWorkerDto } from './dto/create-medical-worker.dto'
 import { UpdateMedicalWorkerDto } from './dto/update-medical-worker.dto'
 import { PaginationQuery } from '@libs/types/pagination'
 import { ApiTags } from '@nestjs/swagger'
+import { CreateWorkRelationDto } from './dto/create-work-relation.dto'
 
 @Controller('medical-workers')
 @ApiTags('Medical Worker')
@@ -47,6 +48,29 @@ export class MedicalWorkerController {
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number) {
     const couldRemove = await this.medicalWorkerService.remove(id)
+    if (!couldRemove) {
+      throw new NotFoundException()
+    }
+  }
+
+  @Post(':id/work-relations')
+  async addWorkRelation(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() createWorkRelationDto: CreateWorkRelationDto
+  ) {
+    return await this.medicalWorkerService.createWorkRelation(id, createWorkRelationDto)
+  }
+
+  @Delete(':medicalWorkerId/work-relations/:workRelationId')
+  async removeWorkRelation(
+    @Param('medicalWorkerId') medicalWorkerId: number,
+    @Param('workRelationId') workRelationId: number
+  ) {
+    const couldRemove = await this.medicalWorkerService.removeWorkRelation(
+      medicalWorkerId,
+      workRelationId
+    )
+
     if (!couldRemove) {
       throw new NotFoundException()
     }

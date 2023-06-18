@@ -4,9 +4,9 @@ export class AuditedEntity {
   @PrimaryKey()
   id: number
 
-  @Property()
+  @Property({ lazy: true })
   created: Date = new Date()
 
-  @Property({ onUpdate: () => new Date() })
+  @Property({ onUpdate: () => new Date(), lazy: true })
   updated: Date = new Date()
 }

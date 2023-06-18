@@ -1,18 +1,7 @@
 import { AuditedEntity } from '@libs/types/entity'
-import {
-  Collection,
-  Entity,
-  Index,
-  ManyToOne,
-  OneToMany,
-  OneToOne,
-  PrimaryKeyType,
-  Property,
-  Unique
-} from '@mikro-orm/core'
-import { Establishment } from '@modules/health/establishment/entities/establishment.entity'
-import { Occupation } from '@modules/health/occupation/entities/occupation.entity'
+import { Collection, Entity, Index, OneToMany, OneToOne, Property, Unique } from '@mikro-orm/core'
 import { User } from '@modules/identity/user/entities/user.entity'
+import { WorkRelation } from './work-relation.entity'
 
 export enum Gender {
   Male = 'Male',
@@ -44,31 +33,4 @@ export class MedicalWorker extends AuditedEntity {
     mappedBy: (workRelation) => workRelation.worker
   })
   workRelations = new Collection<WorkRelation>(this)
-}
-
-// TODO make worker and occupation unique
-@Entity()
-class WorkRelation extends AuditedEntity {
-  @ManyToOne()
-  worker: MedicalWorker
-
-  @ManyToOne()
-  occupation: Occupation
-
-  @OneToMany({
-    entity: () => WorkingEstablishment,
-    mappedBy: (workingEstablishment) => workingEstablishment.workRelation
-  })
-  workingEstablishments = new Collection<WorkingEstablishment>(this)
-}
-
-@Entity()
-class WorkingEstablishment {
-  @ManyToOne({ primary: true, eager: true })
-  workRelation: WorkRelation
-
-  @ManyToOne({ primary: true })
-  establishment: Establishment;
-
-  [PrimaryKeyType]?: [number, number]
 }

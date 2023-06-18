@@ -9,6 +9,7 @@ import { DataModule } from '@modules/business-intelligence/data/data.module'
 @Module({
   controllers: [EstablishmentController],
   providers: [EstablishmentService, SynchronizationService],
-  imports: [MikroOrmModule.forFeature([Establishment]), DataModule]
+  imports: [MikroOrmModule.forFeature([Establishment]), DataModule],
+  exports: [EstablishmentService]
 })
 export class EstablishmentModule {}
