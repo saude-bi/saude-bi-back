@@ -35,7 +35,7 @@ export class PoliciesGuard implements CanActivate {
 
     const params = context.getArgByIndex(0).params
     const request: RequestWithUser = context.switchToHttp().getRequest()
-    const user = await this.userService.findOne(request.user.username)
+    const user = await this.userService.findOneByUsername(request.user.username)
 
     if (!user) {
       return false

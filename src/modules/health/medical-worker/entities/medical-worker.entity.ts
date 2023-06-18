@@ -14,12 +14,16 @@ import { Establishment } from '@modules/health/establishment/entities/establishm
 import { Occupation } from '@modules/health/occupation/entities/occupation.entity'
 import { User } from '@modules/identity/user/entities/user.entity'
 
-export type Gender = 'male' | 'female' | 'other'
+export enum Gender {
+  Male = 'Male',
+  Female = 'Female',
+  Other = 'Other'
+}
 
 @Entity()
 export class MedicalWorker extends AuditedEntity {
-  @OneToOne({ eager: true })
-  user: User
+  @OneToOne({ eager: true, nullable: true })
+  user?: User
 
   @Property()
   name: string

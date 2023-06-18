@@ -1,4 +1,4 @@
-import { PaginationQuery, PaginationResponse } from '@libs/types/pagination'
+import { PaginationResponse } from '@libs/types/pagination'
 import { getPaginationOptions } from '@libs/utils/pagination.utils'
 import { EntityRepository, wrap } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
@@ -24,7 +24,11 @@ export class UserService {
     return newUser
   }
 
-  async findOne(username: string): Promise<User> {
+  async findOne(id: number): Promise<User> {
+    return await this.userRepository.findOne({ id })
+  }
+
+  async findOneByUsername(username: string): Promise<User> {
     return await this.userRepository.findOne({ username })
   }
 
@@ -36,16 +40,16 @@ export class UserService {
     return new PaginationResponse(query, total, result)
   }
 
-  async update(username: string, updatedUser: UpdateUserDto): Promise<User> {
-    const existingUser = await this.findOne(username)
+  async update(id: number, updatedUser: UpdateUserDto): Promise<User> {
+    const existingUser = await this.findOne(id)
     wrap(existingUser).assign(updatedUser)
 
     await this.userRepository.persistAndFlush(existingUser)
     return existingUser
   }
 
-  async remove(username: string): Promise<boolean> {
-    const user = await this.findOne(username)
+  async remove(id: number): Promise<boolean> {
+    const user = await this.findOne(id)
     await this.userRepository.removeAndFlush(user)
 
     return !!user

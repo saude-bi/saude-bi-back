@@ -10,7 +10,7 @@ export class AuthService {
   constructor(private readonly userService: UserService, private readonly jwtService: JwtService) {}
 
   async validateUser(username: string, password: string): Promise<User> {
-    const user = await this.userService.findOne(username)
+    const user = await this.userService.findOneByUsername(username)
 
     if (!user) {
       throw new ForbiddenException()

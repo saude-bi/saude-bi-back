@@ -34,7 +34,6 @@ export class EstablishmentService {
     return await this.establishmentRepository.findOne({ id })
   }
 
-
   async findOneByCnes(cnes: string) {
     return await this.establishmentRepository.findOne({ cnes })
   }
@@ -49,7 +48,7 @@ export class EstablishmentService {
 
   async upsert(establishment: CreateEstablishmentDto) {
     const cnes = establishment.cnes
-    const found = await this.findOneByCnes(cnes);
+    const found = await this.findOneByCnes(cnes)
 
     if (found) {
       this.update(found.id, establishment)

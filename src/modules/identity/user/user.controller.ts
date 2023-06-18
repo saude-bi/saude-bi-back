@@ -8,6 +8,7 @@ import {
   HttpStatus,
   NotFoundException,
   Param,
+  ParseIntPipe,
   Post,
   Query,
   UseGuards
@@ -28,16 +29,16 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @UseGuards(JwtAuthGuard, PoliciesGuard)
-  @CheckPolicies((ability, params: { username: string }) => {
+  @CheckPolicies((ability, params: { id: number }) => {
     const user = new User()
-    user.username = params.username
+    user.id = params.id
 
     return ability.can(Action.Read, user)
   })
   @ApiBearerAuth()
-  @Get(':username')
-  async findOne(@Param('username') username: string) {
-    const user = await this.userService.findOne(username)
+  @Get(':id')
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    const user = await this.userService.findOne(id)
 
     if (!user) {
       throw new NotFoundException()
@@ -59,13 +60,16 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiBearerAuth()
-  @Delete(':username')
-  async remove(@Param('username') username: string, @AuthUser() currentUser: User): Promise<void> {
-    if (currentUser.username !== username) {
+  @Delete(':id')
+  async remove(
+    @Param('id', ParseIntPipe) id: number,
+    @AuthUser() currentUser: User
+  ): Promise<void> {
+    if (currentUser.id !== id) {
       throw new ForbiddenException()
     }
 
-    const couldRemove = await this.userService.remove(username)
+    const couldRemove = await this.userService.remove(id)
     if (!couldRemove) {
       throw new NotFoundException()
     }

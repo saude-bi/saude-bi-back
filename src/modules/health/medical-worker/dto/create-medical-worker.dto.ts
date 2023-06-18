@@ -1,14 +1,16 @@
-import { IsString } from 'class-validator'
+import { CreateUserDto } from '@modules/identity/user/dto/create-user.dto'
+import { IsEnum, IsObject, IsOptional, IsString } from 'class-validator'
 import { Gender } from '../entities/medical-worker.entity'
 
 export class CreateMedicalWorkerDto {
-  @IsString()
-  user: string
+  @IsObject()
+  @IsOptional()
+  user?: CreateUserDto
 
   @IsString()
   name: string
 
-  @IsString()
+  @IsEnum(Gender)
   gender: Gender
 
   @IsString()
