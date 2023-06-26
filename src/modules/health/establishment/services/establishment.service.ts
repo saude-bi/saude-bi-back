@@ -31,7 +31,10 @@ export class EstablishmentService {
   }
 
   async findOne(id: number) {
-    return await this.establishmentRepository.findOne({ id })
+    return await this.establishmentRepository.findOne(
+      { id },
+      { populate: ['workRelations.worker'] }
+    )
   }
 
   async findOneByCnes(cnes: string) {

@@ -1,5 +1,6 @@
 import { AuditedEntity } from '@libs/types/entity'
-import { Entity, Index, Property, Unique } from '@mikro-orm/core'
+import { Entity, Index, OneToOne, Property, Unique } from '@mikro-orm/core'
+import { MedicalWorker } from '@modules/health/medical-worker/entities/medical-worker.entity'
 import { Exclude, Expose } from 'class-transformer'
 
 @Expose()
@@ -16,4 +17,7 @@ export class User extends AuditedEntity {
 
   @Property({ default: false })
   isAdmin: boolean
+
+  @OneToOne(() => MedicalWorker, (worker) => worker.user)
+  medicalWorker?: MedicalWorker
 }

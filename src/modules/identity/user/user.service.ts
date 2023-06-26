@@ -25,11 +25,11 @@ export class UserService {
   }
 
   async findOne(id: number): Promise<User> {
-    return await this.userRepository.findOne({ id })
+    return await this.userRepository.findOne({ id }, { populate: ['medicalWorker'] })
   }
 
   async findOneByUsername(username: string): Promise<User> {
-    return await this.userRepository.findOne({ username })
+    return await this.userRepository.findOne({ username }, { populate: ['medicalWorker'] })
   }
 
   async findAll(query: UserFindAllQuery): Promise<PaginationResponse<User>> {

@@ -11,7 +11,7 @@ export enum Gender {
 
 @Entity()
 export class MedicalWorker extends AuditedEntity {
-  @OneToOne({ eager: true, nullable: true })
+  @OneToOne(() => User, (user) => user.medicalWorker, { nullable: true, owner: true })
   user?: User
 
   @Property()

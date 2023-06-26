@@ -5,10 +5,17 @@ import { Dashboard } from './entities/dashboard.entity'
 import { MikroOrmModule } from '@mikro-orm/nestjs'
 import { DataSourceModule } from '@modules/business-intelligence/data-source/data-source.module'
 import { DashboardCategoryModule } from '@modules/business-intelligence/dashboard-category/dashboard-category.module'
+import { EstablishmentModule } from '@modules/health/establishment/establishment.module'
 
 @Module({
-  imports: [MikroOrmModule.forFeature([Dashboard]), DataSourceModule, DashboardCategoryModule],
+  imports: [
+    MikroOrmModule.forFeature([Dashboard]),
+    EstablishmentModule,
+    DataSourceModule,
+    DashboardCategoryModule
+  ],
   controllers: [DashboardController],
-  providers: [DashboardService]
+  providers: [DashboardService],
+  exports: [DashboardService]
 })
 export class DashboardModule {}

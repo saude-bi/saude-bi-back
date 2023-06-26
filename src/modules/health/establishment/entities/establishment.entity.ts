@@ -1,5 +1,6 @@
 import { AuditedEntity } from '@libs/types/entity'
-import { Entity, Index, Property, Unique } from '@mikro-orm/core'
+import { Collection, Entity, Index, OneToMany, Property, Unique } from '@mikro-orm/core'
+import { WorkRelation } from '@modules/health/medical-worker/entities/work-relation.entity'
 
 @Entity()
 export class Establishment extends AuditedEntity {
@@ -10,4 +11,7 @@ export class Establishment extends AuditedEntity {
 
   @Property()
   name: string
+
+  @OneToMany(() => WorkRelation, (workRelation) => workRelation.establishment)
+  workRelations = new Collection<WorkRelation>(this)
 }

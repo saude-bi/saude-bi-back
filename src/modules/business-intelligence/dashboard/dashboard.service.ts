@@ -4,6 +4,8 @@ import { EntityRepository, wrap } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { DashboardCategoryService } from '@modules/business-intelligence/dashboard-category/dashboard-category.service'
 import { DataSourceService } from '@modules/business-intelligence/data-source/data-source.service'
+import { EstablishmentService } from '@modules/health/establishment/services/establishment.service'
+import { User } from '@modules/identity/user/entities/user.entity'
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { CreateDashboardDto } from './dto/create-dashboard.dto'
 import { UpdateDashboardDto } from './dto/update-dashboard.dto'
@@ -14,11 +16,19 @@ export class DashboardService {
   constructor(
     @InjectRepository(Dashboard)
     private readonly dashboardRepository: EntityRepository<Dashboard>,
+    private readonly establishmentService: EstablishmentService,
     private readonly dataSourceService: DataSourceService,
     private readonly dashboardCategoryService: DashboardCategoryService
   ) {}
 
   async create(dashboard: CreateDashboardDto): Promise<Dashboard> {
+    for (const establishmentId of dashboard.establishmentsWithAccess) {
+      const establishment = await this.establishmentService.findOne(establishmentId)
+      if (!establishment) {
+        throw new BadRequestException(`Could not find establishment with id ${establishmentId}`)
+      }
+    }
+
     const dataSource = await this.dataSourceService.findOne(dashboard.dataSource)
     if (!dataSource) {
       throw new BadRequestException(`Could not find data source with id ${dashboard.dataSource}`)
@@ -29,7 +39,7 @@ export class DashboardService {
       throw new BadRequestException(`Could not find category with id ${dashboard.category}`)
     }
 
-    const newDashboard = this.dashboardRepository.create({ ...dashboard, dataSource })
+    const newDashboard = this.dashboardRepository.create(dashboard)
     await this.dashboardRepository.persistAndFlush(newDashboard)
 
     return newDashboard
@@ -39,9 +49,23 @@ export class DashboardService {
     return await this.dashboardRepository.findOne({ id })
   }
 
-  async findAll(query: PaginationQuery): Promise<PaginationResponse<Dashboard>> {
+  async findAll(
+    query: PaginationQuery,
+    authenticatedUser?: User
+  ): Promise<PaginationResponse<Dashboard>> {
+    let establishmentRestriction = undefined
+    if (authenticatedUser && !authenticatedUser.isAdmin) {
+      establishmentRestriction = {
+        establishmentsWithAccess: {
+          workRelations: {
+            worker: authenticatedUser.medicalWorker
+          }
+        }
+      }
+    }
+
     const [result, total] = await this.dashboardRepository.findAndCount(
-      {},
+      establishmentRestriction,
       getPaginationOptions(query)
     )
 

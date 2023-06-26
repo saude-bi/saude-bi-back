@@ -7,7 +7,7 @@ import { MedicalWorker } from './medical-worker.entity'
 @Entity()
 @Unique({ properties: ['worker', 'occupation', 'establishment'] })
 export class WorkRelation extends AuditedEntity {
-  @ManyToOne(() => MedicalWorker, { hidden: true })
+  @ManyToOne(() => MedicalWorker)
   worker: MedicalWorker
 
   @ManyToOne(() => Occupation, { eager: true })

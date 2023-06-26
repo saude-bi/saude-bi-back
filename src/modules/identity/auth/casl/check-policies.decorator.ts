@@ -30,7 +30,7 @@ export class PoliciesGuard implements CanActivate {
     )
 
     if (!policyHandler) {
-      return false
+      return true
     }
 
     const params = context.getArgByIndex(0).params
