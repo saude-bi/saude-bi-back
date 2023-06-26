@@ -30,7 +30,8 @@ export class MedicalWorker extends AuditedEntity {
 
   @OneToMany({
     entity: () => WorkRelation,
-    mappedBy: (workRelation) => workRelation.worker
+    mappedBy: (workRelation) => workRelation.worker,
+    eager: true
   })
   workRelations = new Collection<WorkRelation>(this)
 }

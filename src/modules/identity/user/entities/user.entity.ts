@@ -18,6 +18,6 @@ export class User extends AuditedEntity {
   @Property({ default: false })
   isAdmin: boolean
 
-  @OneToOne(() => MedicalWorker, (worker) => worker.user)
+  @OneToOne(() => MedicalWorker, (worker) => worker.user, { eager: true })
   medicalWorker?: MedicalWorker
 }
