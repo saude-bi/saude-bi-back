@@ -13,8 +13,8 @@ import {
 import { OccupationService } from './occupation.service'
 import { CreateOccupationDto } from './dto/create-occupation.dto'
 import { UpdateOccupationDto } from './dto/update-occupation.dto'
-import { PaginationQuery } from '@libs/types/pagination'
 import { ApiTags } from '@nestjs/swagger'
+import { OccupationFindAllQuery } from './dto/occupation-filters.dto'
 
 @Controller('occupations')
 @ApiTags('Occupation')
@@ -27,7 +27,7 @@ export class OccupationController {
   }
 
   @Get()
-  async findAll(@Query() query: PaginationQuery) {
+  async findAll(@Query() query: OccupationFindAllQuery) {
     return await this.occupationService.findAll(query)
   }
 
