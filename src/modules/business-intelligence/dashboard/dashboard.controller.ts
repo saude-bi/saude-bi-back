@@ -63,7 +63,7 @@ export class DashboardController {
       throw new ForbiddenException()
     }
 
-    return { ...dashboard, dataSource: undefined }
+    return { ...dashboard }
   }
 
   @Get(':id/url')
