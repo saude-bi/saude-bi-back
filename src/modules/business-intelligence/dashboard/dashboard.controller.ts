@@ -19,6 +19,7 @@ import {
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { DashboardService } from './dashboard.service'
 import { CreateDashboardDto } from './dto/create-dashboard.dto'
+import { FindUrlQuery } from './dto/find-url-query.dto'
 import { UpdateDashboardDto } from './dto/update-dashboard.dto'
 import { Dashboard } from './entities/dashboard.entity'
 
@@ -51,7 +52,7 @@ export class DashboardController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: number, @AuthUser() currentUser: User) {
+  async findOne(@Param('id', ParseIntPipe) id: number, @AuthUser() currentUser: User) {
     const dashboard = await this.dashboardService.findOne(id)
 
     if (!dashboard) {
@@ -62,7 +63,30 @@ export class DashboardController {
       throw new ForbiddenException()
     }
 
-    return dashboard
+    return { ...dashboard, dataSource: undefined }
+  }
+
+  @Get(':id/url')
+  async findDashboardUrl(
+    @Param('id', ParseIntPipe) id: number,
+    @Query() findUrlQuery: FindUrlQuery,
+    @AuthUser() currentUser: User
+  ) {
+    const dashboard = await this.dashboardService.findOne(id)
+
+    if (!currentUser.medicalWorker) {
+      throw new ForbiddenException()
+    }
+
+    if (!dashboard) {
+      throw new NotFoundException()
+    }
+
+    return await this.dashboardService.getEmbedUrl(
+      dashboard,
+      currentUser.medicalWorker,
+      findUrlQuery.workRelation
+    )
   }
 
   @Patch(':id')

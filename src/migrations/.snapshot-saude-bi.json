@@ -109,6 +109,15 @@
           "primary": false,
           "nullable": false,
           "mappedType": "string"
+        },
+        "secret": {
+          "name": "secret",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
         }
       },
       "name": "dashboard_data_source",
@@ -184,6 +193,15 @@
           "primary": false,
           "nullable": false,
           "mappedType": "integer"
+        },
+        "establishment_property_name": {
+          "name": "establishment_property_name",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "string"
         },
         "name": {
           "name": "name",

@@ -1,4 +1,4 @@
-import { IsArray, IsNumber, IsString } from 'class-validator'
+import { IsArray, IsNumber, IsOptional, IsString } from 'class-validator'
 
 export class CreateDashboardDto {
   @IsArray()
@@ -15,4 +15,8 @@ export class CreateDashboardDto {
 
   @IsString()
   name: string
+
+  @IsString()
+  @IsOptional()
+  establishmentPropertyName?: string
 }

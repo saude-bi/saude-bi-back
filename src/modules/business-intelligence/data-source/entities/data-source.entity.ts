@@ -8,6 +8,9 @@ export abstract class DataSource extends AuditedEntity {
 
   @Property()
   url: string
+
+  @Property()
+  secret: string
 }
 
 @Entity()

@@ -18,6 +18,9 @@ export class Dashboard extends AuditedEntity {
   @Property()
   metabaseId: number
 
+  @Property({ nullable: true })
+  establishmentPropertyName?: string
+
   @Property()
   name: string
 }

@@ -7,4 +7,7 @@ export class CreateDataSourceDto {
   @IsString()
   @IsUrl()
   url: string
+
+  @IsString()
+  secret: string
 }

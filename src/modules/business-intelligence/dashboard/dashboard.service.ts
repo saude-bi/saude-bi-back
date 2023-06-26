@@ -5,8 +5,10 @@ import { InjectRepository } from '@mikro-orm/nestjs'
 import { DashboardCategoryService } from '@modules/business-intelligence/dashboard-category/dashboard-category.service'
 import { DataSourceService } from '@modules/business-intelligence/data-source/data-source.service'
 import { EstablishmentService } from '@modules/health/establishment/services/establishment.service'
+import { MedicalWorker } from '@modules/health/medical-worker/entities/medical-worker.entity'
 import { User } from '@modules/identity/user/entities/user.entity'
-import { BadRequestException, Injectable } from '@nestjs/common'
+import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common'
+import { JwtService } from '@nestjs/jwt'
 import { CreateDashboardDto } from './dto/create-dashboard.dto'
 import { UpdateDashboardDto } from './dto/update-dashboard.dto'
 import { Dashboard } from './entities/dashboard.entity'
@@ -18,7 +20,8 @@ export class DashboardService {
     private readonly dashboardRepository: EntityRepository<Dashboard>,
     private readonly establishmentService: EstablishmentService,
     private readonly dataSourceService: DataSourceService,
-    private readonly dashboardCategoryService: DashboardCategoryService
+    private readonly dashboardCategoryService: DashboardCategoryService,
+    private readonly jwtService: JwtService
   ) {}
 
   async create(dashboard: CreateDashboardDto): Promise<Dashboard> {
@@ -45,8 +48,32 @@ export class DashboardService {
     return newDashboard
   }
 
-  async findOne(id: number): Promise<Dashboard> {
-    return await this.dashboardRepository.findOne({ id })
+  async findOne(id: number) {
+    return await this.dashboardRepository.findOne({ id }, { populate: ['dataSource'] })
+  }
+
+  async getEmbedUrl(dashboard: Dashboard, worker: MedicalWorker, workRelationId: number) {
+    console.log(worker)
+    const workRelation = (await worker.workRelations.matching({ where: { id: workRelationId } }))[0]
+
+    if (!workRelation) {
+      throw new ForbiddenException()
+    }
+
+    const dataSource = dashboard.dataSource
+
+    const payload = {
+      resource: { dashboard: dashboard.metabaseId },
+      params: dashboard.establishmentPropertyName
+        ? { [dashboard.establishmentPropertyName]: workRelation.establishment.name }
+        : {}
+    }
+    const token = this.jwtService.sign(payload, { secret: dataSource.secret })
+
+    const url =
+      dataSource.url + '/embed/dashboard/' + token + '#theme=transparent&bordered=false&titled=true'
+
+    return { url }
   }
 
   async findAll(
