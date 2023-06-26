@@ -14,6 +14,7 @@ import { ApiTags } from '@nestjs/swagger'
 import { DashboardCategoryService } from './dashboard-category.service'
 import { CreateDashboardCategoryDto } from './dto/create-dashboard-category.dto'
 import { UpdateDashboardCategoryDto } from './dto/update-dashboard-category.dto'
+import { DashboardCategoryFindAllQuery } from './dto/dashboard-category-filter.dto'
 
 @Controller('dashboard-categories')
 @ApiTags('Dashboard Category')
@@ -26,7 +27,7 @@ export class DashboardCategoryController {
   }
 
   @Get()
-  findAll(@Query() query: PaginationQuery) {
+  findAll(@Query() query: DashboardCategoryFindAllQuery) {
     return this.dashboardCategoryService.findAll(query)
   }
 

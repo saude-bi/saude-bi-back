@@ -6,6 +6,7 @@ import { Injectable } from '@nestjs/common'
 import { CreateDashboardCategoryDto } from './dto/create-dashboard-category.dto'
 import { UpdateDashboardCategoryDto } from './dto/update-dashboard-category.dto'
 import { DashboardCategory } from './entities/dashboard-category.entity'
+import { DashboardCategoryFindAllQuery } from './dto/dashboard-category-filter.dto'
 
 @Injectable()
 export class DashboardCategoryService {
@@ -25,9 +26,11 @@ export class DashboardCategoryService {
     return await this.dashboardCategoryRepository.findOne({ id })
   }
 
-  async findAll(query: PaginationQuery): Promise<PaginationResponse<DashboardCategory>> {
+  async findAll(
+    query: DashboardCategoryFindAllQuery
+  ): Promise<PaginationResponse<DashboardCategory>> {
     const [result, total] = await this.dashboardCategoryRepository.findAndCount(
-      {},
+      { name: new RegExp(query.name, 'i') },
       getPaginationOptions(query)
     )
 
