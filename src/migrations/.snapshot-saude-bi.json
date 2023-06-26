@@ -109,24 +109,6 @@
           "primary": false,
           "nullable": false,
           "mappedType": "string"
-        },
-        "credentials_login": {
-          "name": "credentials_login",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "string"
-        },
-        "credentials_password": {
-          "name": "credentials_password",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "string"
         }
       },
       "name": "dashboard_data_source",
