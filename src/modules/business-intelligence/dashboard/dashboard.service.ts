@@ -90,10 +90,10 @@ export class DashboardService {
       }
     }
 
-    const [result, total] = await this.dashboardRepository.findAndCount(
-      establishmentRestriction,
-      getPaginationOptions(query)
-    )
+    const [result, total] = await this.dashboardRepository.findAndCount(establishmentRestriction, {
+      ...getPaginationOptions(query),
+      populate: ['dataSource', 'category']
+    })
 
     return new PaginationResponse(query, total, result)
   }
