@@ -53,7 +53,6 @@ export class DashboardService {
   }
 
   async getEmbedUrl(dashboard: Dashboard, worker: MedicalWorker, workRelationId: number) {
-    console.log(worker)
     const workRelation = (await worker.workRelations.matching({ where: { id: workRelationId } }))[0]
 
     if (!workRelation) {
