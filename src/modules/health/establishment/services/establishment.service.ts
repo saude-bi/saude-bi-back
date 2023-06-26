@@ -1,4 +1,4 @@
-import { PaginationQuery, PaginationResponse } from '@libs/types/pagination'
+import { PaginationResponse } from '@libs/types/pagination'
 import { getPaginationOptions } from '@libs/utils/pagination.utils'
 import { EntityRepository, wrap } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
@@ -6,6 +6,7 @@ import { Injectable } from '@nestjs/common'
 import { CreateEstablishmentDto } from '../dto/create-establishment.dto'
 import { UpdateEstablishmentDto } from '../dto/update-establishment.dto'
 import { Establishment } from '../entities/establishment.entity'
+import { EstablishmentFindAllQuery } from '../dto/establishment-filter.dto'
 
 @Injectable()
 export class EstablishmentService {
@@ -21,9 +22,9 @@ export class EstablishmentService {
     return newUser
   }
 
-  async findAll(query: PaginationQuery) {
+  async findAll(query: EstablishmentFindAllQuery) {
     const [result, total] = await this.establishmentRepository.findAndCount(
-      {},
+      { name: new RegExp(query.name, 'i') },
       getPaginationOptions(query)
     )
 

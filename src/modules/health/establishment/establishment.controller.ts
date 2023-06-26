@@ -22,7 +22,7 @@ import { Establishment } from './entities/establishment.entity'
 import { SynchronizationQueryDto } from './dto/synchronize-query.dto'
 import { EstablishmentService } from './services/establishment.service'
 import { SynchronizationService } from './services/synchronization.service'
-import { PaginationQuery } from '@libs/types/pagination'
+import { EstablishmentFindAllQuery } from './dto/establishment-filter.dto'
 
 @ApiTags('Establishment')
 @ApiBearerAuth()
@@ -42,7 +42,7 @@ export class EstablishmentController {
 
   @CheckPolicies((ability) => ability.can(Action.List, Establishment))
   @Get()
-  async findAll(@Query() query: PaginationQuery) {
+  async findAll(@Query() query: EstablishmentFindAllQuery) {
     return await this.establishmentService.findAll(query)
   }
 
