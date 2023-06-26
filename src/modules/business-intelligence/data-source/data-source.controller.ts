@@ -15,6 +15,7 @@ import { ApiTags } from '@nestjs/swagger'
 import { DataSourceService } from './data-source.service'
 import { CreateDataSourceDto } from './dto/create-data-source.dto'
 import { UpdateDataSourceDto } from './dto/update-data-source.dto'
+import { DataSourceFindAllQuery } from './dto/data-source-filters.dto'
 
 @Controller('data-sources')
 @ApiTags('Data Source')
@@ -27,7 +28,7 @@ export class DataSourceController {
   }
 
   @Get()
-  findAll(@Query() query: PaginationQuery) {
+  findAll(@Query() query: DataSourceFindAllQuery) {
     return this.dataSourceService.findAll(query)
   }
 

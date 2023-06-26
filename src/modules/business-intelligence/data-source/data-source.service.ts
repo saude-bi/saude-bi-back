@@ -6,6 +6,7 @@ import { Injectable } from '@nestjs/common'
 import { CreateDataSourceDto } from './dto/create-data-source.dto'
 import { UpdateDataSourceDto } from './dto/update-data-source.dto'
 import { DashboardDataSource, DataSource } from './entities/data-source.entity'
+import { DataSourceFindAllQuery } from './dto/data-source-filters.dto'
 
 @Injectable()
 export class DataSourceService {
@@ -25,9 +26,9 @@ export class DataSourceService {
     return await this.dashboardDataSourceRepository.findOne({ id })
   }
 
-  async findAll(query: PaginationQuery): Promise<PaginationResponse<DataSource>> {
+  async findAll(query: DataSourceFindAllQuery): Promise<PaginationResponse<DataSource>> {
     const [result, total] = await this.dashboardDataSourceRepository.findAndCount(
-      {},
+      { name: new RegExp(query.name, 'i') },
       getPaginationOptions(query)
     )
 
