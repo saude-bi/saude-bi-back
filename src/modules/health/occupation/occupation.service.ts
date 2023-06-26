@@ -7,6 +7,7 @@ import { OccupationCategoryService } from '../occupation-category/occupation-cat
 import { CreateOccupationDto } from './dto/create-occupation.dto'
 import { UpdateOccupationDto } from './dto/update-occupation.dto'
 import { Occupation } from './entities/occupation.entity'
+import { OccupationFindAllQuery } from './dto/occupation-filters.dto'
 
 @Injectable()
 export class OccupationService {
@@ -33,9 +34,9 @@ export class OccupationService {
     return await this.occupationRepository.findOne({ id })
   }
 
-  async findAll(query: PaginationQuery): Promise<PaginationResponse<Occupation>> {
+  async findAll(query: OccupationFindAllQuery): Promise<PaginationResponse<Occupation>> {
     const [result, total] = await this.occupationRepository.findAndCount(
-      {},
+      { name: new RegExp(query.name, 'i') },
       getPaginationOptions(query)
     )
 
