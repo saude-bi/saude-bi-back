@@ -1,5 +1,4 @@
-import { IsOptional, IsString, IsUrl } from 'class-validator'
-import { DataSourceCredentials } from '../entities/data-source.entity'
+import { IsString, IsUrl } from 'class-validator'
 
 export class CreateDataSourceDto {
   @IsString()
@@ -8,7 +7,4 @@ export class CreateDataSourceDto {
   @IsString()
   @IsUrl()
   url: string
-
-  @IsOptional()
-  credentials?: DataSourceCredentials
 }
