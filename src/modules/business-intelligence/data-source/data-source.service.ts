@@ -1,4 +1,4 @@
-import { PaginationQuery, PaginationResponse } from '@libs/types/pagination'
+import { PaginationResponse } from '@libs/types/pagination'
 import { getPaginationOptions } from '@libs/utils/pagination.utils'
 import { EntityRepository, wrap } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'

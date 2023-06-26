@@ -49,7 +49,10 @@ export class DashboardService {
   }
 
   async findOne(id: number) {
-    return await this.dashboardRepository.findOne({ id }, { populate: ['dataSource'] })
+    return await this.dashboardRepository.findOne(
+      { id },
+      { populate: ['dataSource', 'establishmentsWithAccess'] }
+    )
   }
 
   async getEmbedUrl(dashboard: Dashboard, worker: MedicalWorker, workRelationId: number) {

@@ -1,4 +1,3 @@
-import { PaginationQuery } from '@libs/types/pagination'
 import {
   Controller,
   Get,
