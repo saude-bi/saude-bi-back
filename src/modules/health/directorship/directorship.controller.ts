@@ -15,7 +15,7 @@ import { UpdateDirectorshipDto } from './dto/update-directorship.dto'
 import { ApiTags } from '@nestjs/swagger'
 import { DirectorshipFindAllQuery } from './dto/directorship-filters.dto'
 
-@Controller('directorship')
+@Controller('directorships')
 @ApiTags('Directorship')
 export class DirectorshipController {
   constructor(private readonly directorshipService: DirectorshipService) {}
