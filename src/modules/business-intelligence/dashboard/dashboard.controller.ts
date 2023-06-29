@@ -1,4 +1,3 @@
-import { PaginationQuery } from '@libs/types/pagination'
 import { AuthUser } from '@modules/identity/auth/decorators/auth-user.decorator'
 import { JwtAuthGuard } from '@modules/identity/auth/guards/jwt-auth.guard'
 import { User } from '@modules/identity/user/entities/user.entity'
@@ -19,6 +18,7 @@ import {
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { DashboardService } from './dashboard.service'
 import { CreateDashboardDto } from './dto/create-dashboard.dto'
+import { DashboardFindAllQuery } from './dto/dashboard-filters.dto'
 import { FindUrlQuery } from './dto/find-url-query.dto'
 import { UpdateDashboardDto } from './dto/update-dashboard.dto'
 import { Dashboard } from './entities/dashboard.entity'
@@ -47,7 +47,7 @@ export class DashboardController {
   }
 
   @Get()
-  findAll(@Query() query: PaginationQuery, @AuthUser() currentUser: User) {
+  findAll(@Query() query: DashboardFindAllQuery, @AuthUser() currentUser: User) {
     return this.dashboardService.findAll(query, currentUser)
   }
 

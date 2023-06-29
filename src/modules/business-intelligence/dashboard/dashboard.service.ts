@@ -1,4 +1,4 @@
-import { PaginationQuery, PaginationResponse } from '@libs/types/pagination'
+import { PaginationResponse } from '@libs/types/pagination'
 import { getPaginationOptions } from '@libs/utils/pagination.utils'
 import { EntityRepository, wrap } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
@@ -10,6 +10,7 @@ import { User } from '@modules/identity/user/entities/user.entity'
 import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { CreateDashboardDto } from './dto/create-dashboard.dto'
+import { DashboardFindAllQuery } from './dto/dashboard-filters.dto'
 import { UpdateDashboardDto } from './dto/update-dashboard.dto'
 import { Dashboard } from './entities/dashboard.entity'
 
@@ -79,12 +80,12 @@ export class DashboardService {
   }
 
   async findAll(
-    query: PaginationQuery,
+    query: DashboardFindAllQuery,
     authenticatedUser?: User
   ): Promise<PaginationResponse<Dashboard>> {
-    let establishmentRestriction = undefined
+    let whereQuery = undefined
     if (authenticatedUser && !authenticatedUser.isAdmin) {
-      establishmentRestriction = {
+      whereQuery = {
         establishmentsWithAccess: {
           workRelations: {
             worker: authenticatedUser.medicalWorker
@@ -93,7 +94,11 @@ export class DashboardService {
       }
     }
 
-    const [result, total] = await this.dashboardRepository.findAndCount(establishmentRestriction, {
+    if (query.category) {
+      whereQuery = { ...whereQuery, category: query.category }
+    }
+
+    const [result, total] = await this.dashboardRepository.findAndCount(whereQuery, {
       ...getPaginationOptions(query),
       populate: ['dataSource', 'category']
     })
