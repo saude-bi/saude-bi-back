@@ -98,10 +98,13 @@ export class DashboardService {
       whereQuery = { ...whereQuery, category: query.category }
     }
 
-    const [result, total] = await this.dashboardRepository.findAndCount(whereQuery, {
-      ...getPaginationOptions(query),
-      populate: ['dataSource', 'category']
-    })
+    const [result, total] = await this.dashboardRepository.findAndCount(
+      { ...whereQuery, name: new RegExp(query.name, 'i') },
+      {
+        ...getPaginationOptions(query),
+        populate: ['dataSource', 'category']
+      }
+    )
 
     return new PaginationResponse(query, total, result)
   }

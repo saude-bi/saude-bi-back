@@ -13,9 +13,9 @@ import {
 import { MedicalWorkerService } from './medical-worker.service'
 import { CreateMedicalWorkerDto } from './dto/create-medical-worker.dto'
 import { UpdateMedicalWorkerDto } from './dto/update-medical-worker.dto'
-import { PaginationQuery } from '@libs/types/pagination'
 import { ApiTags } from '@nestjs/swagger'
 import { CreateWorkRelationDto } from './dto/create-work-relation.dto'
+import { MedicalWorkerFindAllQuery } from './dto/medical-worker-filters.dto'
 
 @Controller('medical-workers')
 @ApiTags('Medical Worker')
@@ -28,7 +28,7 @@ export class MedicalWorkerController {
   }
 
   @Get()
-  async findAll(@Query() query: PaginationQuery) {
+  async findAll(@Query() query: MedicalWorkerFindAllQuery) {
     return await this.medicalWorkerService.findAll(query)
   }
 

@@ -1,4 +1,4 @@
-import { PaginationQuery, PaginationResponse } from '@libs/types/pagination'
+import { PaginationResponse } from '@libs/types/pagination'
 import { getPaginationOptions } from '@libs/utils/pagination.utils'
 import { EntityRepository, wrap } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
@@ -8,6 +8,7 @@ import { EstablishmentService } from '../establishment/services/establishment.se
 import { OccupationService } from '../occupation/occupation.service'
 import { CreateMedicalWorkerDto } from './dto/create-medical-worker.dto'
 import { CreateWorkRelationDto } from './dto/create-work-relation.dto'
+import { MedicalWorkerFindAllQuery } from './dto/medical-worker-filters.dto'
 import { UpdateMedicalWorkerDto } from './dto/update-medical-worker.dto'
 import { MedicalWorker } from './entities/medical-worker.entity'
 import { WorkRelation } from './entities/work-relation.entity'
@@ -42,9 +43,9 @@ export class MedicalWorkerService {
     )
   }
 
-  async findAll(query: PaginationQuery): Promise<PaginationResponse<MedicalWorker>> {
+  async findAll(query: MedicalWorkerFindAllQuery): Promise<PaginationResponse<MedicalWorker>> {
     const [result, total] = await this.medicalWorkerRepository.findAndCount(
-      {},
+      { name: new RegExp(query.name, 'i') },
       {
         ...getPaginationOptions(query),
         populate: ['created', 'updated', 'workRelations']
