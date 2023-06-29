@@ -65,7 +65,7 @@ export class UserController {
     @Param('id', ParseIntPipe) id: number,
     @AuthUser() currentUser: User
   ): Promise<void> {
-    if (currentUser.id !== id) {
+    if (currentUser.id !== id && !currentUser.isAdmin) {
       throw new ForbiddenException()
     }
 
