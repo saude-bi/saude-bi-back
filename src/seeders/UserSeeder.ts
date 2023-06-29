@@ -13,10 +13,16 @@ export class UserSeeder extends Seeder {
         password: await hash('admin', 10),
         isAdmin: true,
       },
+      workRelations: [
+        {
+          occupation: await em.findOne('Occupation', { cbo: '131210' }),
+          establishment: await em.findOne('Establishment', { cnes: '6415903' }),
+        }
+      ],
       name: 'Admnistrador',
       gender: Gender.Male,
-      cns: '1234567890123456',
-      cpf: '12345678901',
+      cns: '251454548330007',
+      cpf: '81558947035',
     });
   }
 
