@@ -50,17 +50,21 @@ export class EstablishmentService {
     return existing
   }
 
-  async upsert(establishment: CreateEstablishmentDto) {
+  async upsert(establishment: Establishment) {
     const cnes = establishment.cnes
     const found = await this.findOneByCnes(cnes)
 
-    if (found) {
-      this.update(found.id, establishment)
-    } else {
-      this.create(establishment)
+    const establishmentDto: CreateEstablishmentDto = {
+      name: establishment.name,
+      cnes: establishment.cnes,
+      directorship: establishment.directorship.id
     }
 
-    await this.establishmentRepository.upsert(establishment)
+    if (found) {
+      this.update(found.id, establishmentDto)
+    } else {
+      this.create(establishmentDto)
+    }
   }
 
   async remove(id: number) {
