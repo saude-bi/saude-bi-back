@@ -1,4 +1,5 @@
-import { IsString } from 'class-validator'
+import { Directorship } from '@modules/health/directorship/entities/directorship.entity'
+import { IsNumber, IsOptional, IsString } from 'class-validator'
 
 export class CreateEstablishmentDto {
   @IsString()
@@ -6,4 +7,8 @@ export class CreateEstablishmentDto {
 
   @IsString()
   name: string
+
+  @IsOptional()
+  @IsNumber()
+  directorship?: Directorship
 }
