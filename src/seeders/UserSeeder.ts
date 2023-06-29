@@ -17,6 +17,10 @@ export class UserSeeder extends Seeder {
         {
           occupation: await em.findOne('Occupation', { cbo: '131210' }),
           establishment: await em.findOne('Establishment', { cnes: '6415903' }),
+        },
+        {
+          occupation: await em.findOne('Occupation', { cbo: '225142' }),
+          establishment: await em.findOne('Establishment', { cnes: '2672987' }),
         }
       ],
       name: 'Admnistrador',

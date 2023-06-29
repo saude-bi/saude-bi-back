@@ -12,6 +12,10 @@ export class OccupationSeeder extends Seeder {
           {
             name: 'Gerente de Serviços de Saúde',
             cbo: '131210',
+          },
+          {
+            name: 'Médico da Estratégia de Saúde da Familia',
+            cbo: '225142',
           }
         ]
       }
