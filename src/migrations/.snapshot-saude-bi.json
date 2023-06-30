@@ -285,6 +285,72 @@
           "length": 6,
           "mappedType": "datetime"
         },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "acronym": {
+          "name": "acronym",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        }
+      },
+      "name": "directorship",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "directorship_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "unsigned": true,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "created": {
+          "name": "created",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "updated": {
+          "name": "updated",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
         "cnes": {
           "name": "cnes",
           "type": "varchar(255)",
@@ -302,6 +368,15 @@
           "primary": false,
           "nullable": false,
           "mappedType": "string"
+        },
+        "directorship_id": {
+          "name": "directorship_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
         }
       },
       "name": "establishment",
@@ -336,7 +411,20 @@
         }
       ],
       "checks": [],
-      "foreignKeys": {}
+      "foreignKeys": {
+        "establishment_directorship_id_foreign": {
+          "constraintName": "establishment_directorship_id_foreign",
+          "columnNames": [
+            "directorship_id"
+          ],
+          "localTableName": "public.establishment",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.directorship",
+          "updateRule": "cascade"
+        }
+      }
     },
     {
       "columns": {
