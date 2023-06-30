@@ -3,14 +3,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: dependencies
     ports:
       - ${PORT}:8000
     depends_on:
       - postgres
     volumes:
       - .:/usr/src/app
-    command: yarn start:dev
     environment:
       - DB_HOST=postgres
 

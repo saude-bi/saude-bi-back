@@ -35,4 +35,4 @@ COPY --from=builder --chown=node:node /usr/src/app/dist ./dist
 
 USER node
 EXPOSE 8000
-CMD node dist/main.js
+CMD node dist/src/main.js
