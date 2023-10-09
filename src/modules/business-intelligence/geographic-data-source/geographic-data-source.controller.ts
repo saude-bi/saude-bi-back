@@ -18,7 +18,7 @@ import { CreateGeographicDataSourceDto } from './dto/create-geographic-data-sour
 import { GeographicDataSourceFindAllQuery } from './dto/geographic-data-source-filters.dto'
 import { UpdateGeographicDataSourceDto } from './dto/update-geographic-data-source.dto'
 
-@Controller('geographic-data-source')
+@Controller('geographic-data-sources')
 @ApiTags('Geographic Data Source')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
