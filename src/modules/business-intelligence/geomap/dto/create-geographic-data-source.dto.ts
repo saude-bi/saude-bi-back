@@ -1,6 +1,6 @@
 import { IsNumber, IsString } from 'class-validator'
 
-export class CreateGeomapDto {
+export class CreateGeographicDataSourceDto {
   @IsNumber()
   category: number
 

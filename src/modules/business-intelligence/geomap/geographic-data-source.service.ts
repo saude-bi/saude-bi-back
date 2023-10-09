@@ -4,20 +4,20 @@ import { EntityRepository, wrap } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
 import { DashboardCategoryService } from '@modules/business-intelligence/dashboard-category/dashboard-category.service'
 import { BadRequestException, Injectable } from '@nestjs/common'
-import { CreateGeomapDto } from './dto/create-geomap.dto'
-import { GeomapFindAllQuery } from './dto/geomap-filters.dto'
-import { UpdateGeomapDto } from './dto/update-geomap.dto'
-import { Geomap } from './entities/geomap.entity'
+import { CreateGeographicDataSourceDto } from './dto/create-geographic-data-source.dto'
+import { UpdateGeographicDataSourceDto } from './dto/update-geographic-data-source.dto'
+import { GeographicDataSource } from './entities/geographic-data-source.entity'
+import { GeographicDataSourceFindAllQuery } from './dto/geographic-data-source-filters.dto'
 
 @Injectable()
-export class GeomapService {
+export class GeographicDataSourceService {
   constructor(
-    @InjectRepository(Geomap)
-    private readonly geomapRepository: EntityRepository<Geomap>,
+    @InjectRepository(GeographicDataSource)
+    private readonly geomapRepository: EntityRepository<GeographicDataSource>,
     private readonly dashboardCategoryService: DashboardCategoryService
   ) {}
 
-  async create(geomap: CreateGeomapDto): Promise<Geomap> {
+  async create(geomap: CreateGeographicDataSourceDto): Promise<GeographicDataSource> {
     const category = await this.dashboardCategoryService.findOne(geomap.category)
 
     if (!category) {
@@ -34,7 +34,7 @@ export class GeomapService {
     return await this.geomapRepository.findOne({ id }, { populate: ['category'] })
   }
 
-  async findAll(query: GeomapFindAllQuery): Promise<PaginationResponse<Geomap>> {
+  async findAll(query: GeographicDataSourceFindAllQuery): Promise<PaginationResponse<GeographicDataSource>> {
     const [result, total] = await this.geomapRepository.findAndCount(
       { name: new RegExp(query.name, 'i') },
       {
@@ -46,7 +46,7 @@ export class GeomapService {
     return new PaginationResponse(query, total, result)
   }
 
-  async update(id: number, updatedGeomap: UpdateGeomapDto): Promise<Geomap> {
+  async update(id: number, updatedGeomap: UpdateGeographicDataSourceDto): Promise<GeographicDataSource> {
     const existingGeomap = await this.findOne(id)
     wrap(existingGeomap).assign(updatedGeomap)
 
