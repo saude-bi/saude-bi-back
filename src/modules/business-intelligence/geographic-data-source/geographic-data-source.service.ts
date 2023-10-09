@@ -13,29 +13,29 @@ import { GeographicDataSourceFindAllQuery } from './dto/geographic-data-source-f
 export class GeographicDataSourceService {
   constructor(
     @InjectRepository(GeographicDataSource)
-    private readonly geomapRepository: EntityRepository<GeographicDataSource>,
+    private readonly geographicDataSourceRepository: EntityRepository<GeographicDataSource>,
     private readonly dashboardCategoryService: DashboardCategoryService
   ) {}
 
-  async create(geomap: CreateGeographicDataSourceDto): Promise<GeographicDataSource> {
-    const category = await this.dashboardCategoryService.findOne(geomap.category)
+  async create(geographicDataSource: CreateGeographicDataSourceDto): Promise<GeographicDataSource> {
+    const category = await this.dashboardCategoryService.findOne(geographicDataSource.category)
 
     if (!category) {
-      throw new BadRequestException(`Could not find category with id ${geomap.category}`)
+      throw new BadRequestException(`Could not find category with id ${geographicDataSource.category}`)
     }
 
-    const newGeomap = this.geomapRepository.create(geomap)
-    await this.geomapRepository.persistAndFlush(newGeomap)
+    const newGeographicDataSource = this.geographicDataSourceRepository.create(geographicDataSource)
+    await this.geographicDataSourceRepository.persistAndFlush(newGeographicDataSource)
 
-    return newGeomap
+    return newGeographicDataSource
   }
 
   async findOne(id: number) {
-    return await this.geomapRepository.findOne({ id }, { populate: ['category'] })
+    return await this.geographicDataSourceRepository.findOne({ id }, { populate: ['category'] })
   }
 
   async findAll(query: GeographicDataSourceFindAllQuery): Promise<PaginationResponse<GeographicDataSource>> {
-    const [result, total] = await this.geomapRepository.findAndCount(
+    const [result, total] = await this.geographicDataSourceRepository.findAndCount(
       { name: new RegExp(query.name, 'i') },
       {
         ...getPaginationOptions(query),
@@ -46,18 +46,18 @@ export class GeographicDataSourceService {
     return new PaginationResponse(query, total, result)
   }
 
-  async update(id: number, updatedGeomap: UpdateGeographicDataSourceDto): Promise<GeographicDataSource> {
-    const existingGeomap = await this.findOne(id)
-    wrap(existingGeomap).assign(updatedGeomap)
+  async update(id: number, updatedGeographicDataSource: UpdateGeographicDataSourceDto): Promise<GeographicDataSource> {
+    const existingGeographicDataSource = await this.findOne(id)
+    wrap(existingGeographicDataSource).assign(updatedGeographicDataSource)
 
-    await this.geomapRepository.persistAndFlush(existingGeomap)
-    return existingGeomap
+    await this.geographicDataSourceRepository.persistAndFlush(existingGeographicDataSource)
+    return existingGeographicDataSource
   }
 
   async remove(id: number): Promise<boolean> {
-    const geomap = await this.findOne(id)
-    await this.geomapRepository.removeAndFlush(geomap)
+    const geographicDataSource = await this.findOne(id)
+    await this.geographicDataSourceRepository.removeAndFlush(geographicDataSource)
 
-    return !!geomap
+    return !!geographicDataSource
   }
 }
