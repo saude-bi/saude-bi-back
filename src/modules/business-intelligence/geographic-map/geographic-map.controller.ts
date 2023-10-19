@@ -10,7 +10,7 @@ import {
   ParseIntPipe,
   Query,
   NotFoundException,
-  UseGuards,
+  UseGuards
 } from '@nestjs/common'
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { GeographicMapService } from './geographic-map.service'

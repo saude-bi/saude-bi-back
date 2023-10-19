@@ -8,7 +8,7 @@ export class GeographicMap extends AuditedEntity {
   @ManyToOne(() => DashboardCategory)
   category: DashboardCategory
 
-  @ManyToMany(() => GeographicDataSource, "usedIn")
+  @ManyToMany(() => GeographicDataSource, 'usedIn')
   layers = new Collection<GeographicDataSource>(this)
 
   @Property()

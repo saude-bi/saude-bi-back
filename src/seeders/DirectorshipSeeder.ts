@@ -1,9 +1,6 @@
-import type { Dictionary, EntityManager } from '@mikro-orm/core';
-import { Seeder } from '@mikro-orm/seeder';
-import { Directorship } from '@modules/health/directorship/entities/directorship.entity';
-import { Establishment } from '@modules/health/establishment/entities/establishment.entity';
-
-
+import type { Dictionary, EntityManager } from '@mikro-orm/core'
+import { Seeder } from '@mikro-orm/seeder'
+import { Directorship } from '@modules/health/directorship/entities/directorship.entity'
 
 export class DirectorshipSeeder extends Seeder {
   async run(em: EntityManager, context: Dictionary): Promise<void> {
@@ -14,112 +11,112 @@ export class DirectorshipSeeder extends Seeder {
         establishments: [
           {
             name: 'SECRETARIA MUNÍCIPAL DE SAÚDE',
-            cnes: '6415903',
+            cnes: '6415903'
           },
           {
             name: 'UBS PQ PRESIDENTE',
-            cnes: '2593955',
-        },
-        {
+            cnes: '2593955'
+          },
+          {
             name: 'UBS PORTO BELO',
-            cnes: '2593998',
-        },
-        {
+            cnes: '2593998'
+          },
+          {
             name: 'UBS MORUMBI III',
-            cnes: '2594013',
-        },
-        {
+            cnes: '2594013'
+          },
+          {
             name: 'UBS PROFILURB I',
-            cnes: '2593890',
-        },
-        {
+            cnes: '2593890'
+          },
+          {
             name: 'UBS JARDIM CURITIBANO',
-            cnes: '2672979',
-        },
-        {
+            cnes: '2672979'
+          },
+          {
             name: 'UBS PORTAL DA FOZ',
-            cnes: '2673029',
-        },
-        {
+            cnes: '2673029'
+          },
+          {
             name: 'UBS CIDADE NOVA',
-            cnes: '2673134',
-        },
-        {
+            cnes: '2673134'
+          },
+          {
             name: 'UBS VILA YOLANDA',
-            cnes: '2593920',
-        },
-        {
+            cnes: '2593920'
+          },
+          {
             name: 'UBS JARDIM SAO PAULO',
-            cnes: '2672960',
-        },
-        {
+            cnes: '2672960'
+          },
+          {
             name: 'UBS CARIMA',
-            cnes: '2672995',
-        },
-        {
+            cnes: '2672995'
+          },
+          {
             name: 'UBS MORUMBI II',
-            cnes: '7489374',
-        },
-        {
+            cnes: '7489374'
+          },
+          {
             name: 'UBS JARDIM JUPIRA',
-            cnes: '6053114',
-        },
-        {
+            cnes: '6053114'
+          },
+          {
             name: 'UBS VILA C NOVA',
-            cnes: '3841626',
-        },
-        {
+            cnes: '3841626'
+          },
+          {
             name: 'UBS JARDIM AMERICA',
-            cnes: '2673010',
-        },
-        {
+            cnes: '2673010'
+          },
+          {
             name: 'UBS TRES LAGOAS',
-            cnes: '2673037',
-        },
-        {
+            cnes: '2673037'
+          },
+          {
             name: 'UBS SOL DE MAIO',
-            cnes: '2673126',
-        },
-        {
+            cnes: '2673126'
+          },
+          {
             name: 'UBS CAMPOS DO IGUACU',
-            cnes: '2593963',
-        },
-        {
+            cnes: '2593963'
+          },
+          {
             name: 'UBS TRES BANDEIRAS',
-            cnes: '2673150',
-        },
-        {
+            cnes: '2673150'
+          },
+          {
             name: 'UBS JARDIM SAO PAULO II',
-            cnes: '5133815',
-        },
-        {
+            cnes: '5133815'
+          },
+          {
             name: 'UBS PADRE MONTI',
-            cnes: '3448363',
-        },
-        {
+            cnes: '3448363'
+          },
+          {
             name: 'UBS MARACANA',
-            cnes: '7876726',
-        },
-        {
+            cnes: '7876726'
+          },
+          {
             name: 'UBS VILA ADRIANA',
-            cnes: '2673142',
-        },
-        {
+            cnes: '2673142'
+          },
+          {
             name: 'UBS OURO VERDE',
-            cnes: '3001172',
-        },
-        {
-          name: 'NUCLEO DE SAUDE AKLP',
-          cnes: '2673002',
-      },
-      {
-          name: 'NUCLEO DE SAUDE SAO JOAO',
-          cnes: '2673169',
-      },
-      {
-          name: 'NUCLEO DE SAUDE PROFILURB II',
-          cnes: '2593882',
-      }              
+            cnes: '3001172'
+          },
+          {
+            name: 'NUCLEO DE SAUDE AKLP',
+            cnes: '2673002'
+          },
+          {
+            name: 'NUCLEO DE SAUDE SAO JOAO',
+            cnes: '2673169'
+          },
+          {
+            name: 'NUCLEO DE SAUDE PROFILURB II',
+            cnes: '2593882'
+          }
         ]
       },
       {
@@ -270,15 +267,15 @@ export class DirectorshipSeeder extends Seeder {
       },
       {
         name: 'Diretoria de Saúde Mental e Residência',
-        acronym: 'DIRS',
+        acronym: 'DIRS'
       },
       {
         name: 'Diretoria de Vigilância em Saúde',
-        acronym: 'DIVS',
+        acronym: 'DIVS'
       },
       {
         name: 'Diretoria de Auditoria e Controle',
-        acronym: 'DIAC',
+        acronym: 'DIAC'
       },
       {
         name: 'Diretoria de Gestão de Pessoas',
@@ -286,21 +283,20 @@ export class DirectorshipSeeder extends Seeder {
         establishments: [
           {
             name: 'UBS VILA C',
-            cnes: '2672987',
-          },
+            cnes: '2672987'
+          }
         ]
       },
       {
         name: 'Diretoria de Gestão Financeira e Contábil',
-        acronym: 'DIFC',
-      },
-    ];
-  
+        acronym: 'DIFC'
+      }
+    ]
 
     context.directorship = entities.map((item) => {
       em.create(Directorship, {
         ...item
-      });
-    });
+      })
+    })
   }
 }

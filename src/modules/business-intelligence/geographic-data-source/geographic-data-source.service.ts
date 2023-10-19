@@ -21,7 +21,9 @@ export class GeographicDataSourceService {
     const category = await this.dashboardCategoryService.findOne(geographicDataSource.category)
 
     if (!category) {
-      throw new BadRequestException(`Could not find category with id ${geographicDataSource.category}`)
+      throw new BadRequestException(
+        `Could not find category with id ${geographicDataSource.category}`
+      )
     }
 
     const newGeographicDataSource = this.geographicDataSourceRepository.create(geographicDataSource)
@@ -34,7 +36,9 @@ export class GeographicDataSourceService {
     return await this.geographicDataSourceRepository.findOne({ id }, { populate: ['category'] })
   }
 
-  async findAll(query: GeographicDataSourceFindAllQuery): Promise<PaginationResponse<GeographicDataSource>> {
+  async findAll(
+    query: GeographicDataSourceFindAllQuery
+  ): Promise<PaginationResponse<GeographicDataSource>> {
     const [result, total] = await this.geographicDataSourceRepository.findAndCount(
       { name: new RegExp(query.name, 'i') },
       {
@@ -46,7 +50,10 @@ export class GeographicDataSourceService {
     return new PaginationResponse(query, total, result)
   }
 
-  async update(id: number, updatedGeographicDataSource: UpdateGeographicDataSourceDto): Promise<GeographicDataSource> {
+  async update(
+    id: number,
+    updatedGeographicDataSource: UpdateGeographicDataSourceDto
+  ): Promise<GeographicDataSource> {
     const existingGeographicDataSource = await this.findOne(id)
     wrap(existingGeographicDataSource).assign(updatedGeographicDataSource)
 
