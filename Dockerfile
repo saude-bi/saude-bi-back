@@ -1,38 +1,37 @@
-########
-# Base #
-########
-FROM node:16-alpine AS base
-WORKDIR /usr/src/app
-COPY package*.json ./
+FROM node:18.16-alpine3.17  as builder
 
-################
-# Dependencies #
-################
-FROM base AS dependencies
-RUN yarn install --production=false --frozen-lockfile && yarn cache clean
+# ------------------------------------------
+# change the working directory
+# ------------------------------------------
+WORKDIR /home/node/app
 
-#######################
-# Pruned Dependencies #
-#######################
-FROM dependencies AS pruned-dependencies
-RUN npm prune --omit=dev --legacy-peer-deps
+# ------------------------------------------
+# install dependences
+# ------------------------------------------
+RUN yarn global add @nestjs/cli@10.1.17
+COPY package.json yarn.lock ./
 
-###########
-# Builder #
-###########
-FROM base AS builder
-COPY --from=dependencies --chown=node:node /usr/src/app/node_modules ./node_modules
-COPY --chown=node:node . .
+RUN yarn install --immutable
+
+# ------------------------------------------
+# copy content
+# ------------------------------------------
+COPY . .
+
 RUN yarn build
 
-##############
-# Production #
-##############
-FROM base AS production
+# ------------------------------------------
+# Optomize image size
+# ------------------------------------------
+FROM node:18.16-alpine3.17
 
-COPY --from=pruned-dependencies --chown=node:node /usr/src/app/node_modules ./node_modules
-COPY --from=builder --chown=node:node /usr/src/app/dist ./dist
+WORKDIR /home/node/app
 
+COPY --from=builder  /home/node/app /home/node/app
+
+# ------------------------------------------
+# start server
+# ------------------------------------------
 USER node
-EXPOSE 8000
-CMD node dist/main.js
+
+CMD [ "node", "dist/src/main.js" ]
