@@ -47,7 +47,7 @@ jobs:
   push-ecr:
     name: Deploy
     runs-on: ubuntu-latest
-    environment: production
+    environment: deploy-ci
 
     steps:
       - name: Checkout
