@@ -1,6 +1,6 @@
 name: Continuous Integration
 env:
-  AWS_REGION: ${{ vars.MY_AWS_REGION }} # set this to your preferred AWS region, e.g. us-west-1
+  AWS_REGION: ${{ vars.AWS_REGION }} # set this to your preferred AWS region, e.g. us-west-1
   ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }} # set this to your Amazon ECR repository name
 
 on: 
@@ -59,7 +59,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
-          aws-region: ${{ env.MY_AWS_REGION }}
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
         id: login-ecr
