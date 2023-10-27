@@ -24,7 +24,7 @@ import { AppConfig } from './app-config.service'
         MAINTAINER_CNPJ: Joi.string().length(14).required(),
         DOWNLOAD_PATH: Joi.string().required(),
         REDIS_HOST: Joi.string().required(),
-        REDIS_PORT: Joi.string().required(),
+        REDIS_PORT: Joi.string().required()
       })
     })
   ]
