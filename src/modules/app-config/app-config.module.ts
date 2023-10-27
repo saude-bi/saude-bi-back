@@ -22,7 +22,9 @@ import { AppConfig } from './app-config.service'
         MODE: Joi.string().valid('dev', 'production').required(),
         JWT_SECRET: Joi.string().required(),
         MAINTAINER_CNPJ: Joi.string().length(14).required(),
-        DOWNLOAD_PATH: Joi.string().required()
+        DOWNLOAD_PATH: Joi.string().required(),
+        REDIS_HOST: Joi.string().required(),
+        REDIS_PORT: Joi.string().required(),
       })
     })
   ]

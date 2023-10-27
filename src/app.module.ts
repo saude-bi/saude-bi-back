@@ -33,7 +33,10 @@ const helperModules = [
   }),
   CacheModule.registerAsync({
     useFactory: async () => ({
-      store: (await redisStore({ url: 'redis://redis:6379', ttl: 5 })) as unknown as CacheStore
+      store: (await redisStore({ 
+        url: `redis:/${process.env.REDIS_HOST}:${process.env.RED_PORT}`,
+        ttl: 5
+      })) as unknown as CacheStore
     }),
     isGlobal: true
   })
