@@ -13,8 +13,8 @@ const config = {
   },
   seeder: {
     path: 'dist/seeders',
-    pathTs: 'src/seeders',
-  },
+    pathTs: 'src/seeders'
+  }
 }
 
 exports.default = config
