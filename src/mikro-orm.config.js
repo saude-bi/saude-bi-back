@@ -10,7 +10,11 @@ const config = {
   migrations: {
     path: 'dist/migrations',
     pathTs: 'src/migrations'
-  }
+  },
+  seeder: {
+    path: 'dist/seeders',
+    pathTs: 'src/seeders',
+  },
 }
 
 exports.default = config
