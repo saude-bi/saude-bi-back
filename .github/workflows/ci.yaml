@@ -46,7 +46,7 @@ jobs:
       - run: yarn test:e2e
   push-ecr:
     name: Deploy
-    needs: Test
+    needs: test
     runs-on: ubuntu-latest
     environment: deploy-ci
 
