@@ -46,6 +46,14 @@ export class GeographicLayerController {
     return { ...geographicLayer }
   }
 
+  @Get(':id/data')
+  async getData(@Param('id', ParseIntPipe) id: number) {
+    const layer = await this.findOne(id)
+    const { sourceUrl, credentials } = layer.source
+
+    return await this.geographicLayerService.fetchGeoJSON(sourceUrl, layer.params, credentials)
+  }
+
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,

@@ -27,15 +27,11 @@ export class GeographicLayerService {
   }
 
   async fetchGeoJSON(endpoint: string, params: string, credentials: GeographicDataSourceCredentials) {
-    return await lastValueFrom(this.httpService.get(endpoint + params).pipe(map(r => r.data)))
+    return await lastValueFrom(this.httpService.get(endpoint + params, { auth: credentials }).pipe(map(r => r.data)))
   }
 
   async findOne(id: number) {
-    const layer =
-      await this.geographicLayerRepository.findOne({ id }, { populate: ["source"] })
-    const { sourceUrl, credentials } = layer.source
-
-    return { ...layer, data: await this.fetchGeoJSON(sourceUrl, layer.params, credentials) }
+    return await this.geographicLayerRepository.findOne({ id }, { populate: ["source"] })
   }
 
   async findAll(query: GeographicLayerFindAllQuery): Promise<PaginationResponse<GeographicLayer>> {
