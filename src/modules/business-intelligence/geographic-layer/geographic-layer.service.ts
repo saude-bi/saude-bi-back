@@ -31,7 +31,7 @@ export class GeographicLayerService {
 
   async findOne(id: number) {
     const layer =
-      await this.geographicLayerRepository.findOne({ id }, {})
+      await this.geographicLayerRepository.findOne({ id }, { populate: ["source"] })
     const { sourceUrl, credentials } = layer.source
 
     return { ...layer, data: this.fetchGeoJSON(sourceUrl, layer.params, credentials) }
