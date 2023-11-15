@@ -27,7 +27,7 @@ export class GeographicLayerService {
   }
 
   async fetchGeoJSON(endpoint: string, params: string, credentials: GeographicDataSourceCredentials) {
-    return await lastValueFrom(this.httpService.get(endpoint + "?" + params, { auth: credentials }).pipe(map(r => r.data)))
+    return await lastValueFrom(this.httpService.get(endpoint + params).pipe(map(r => r.data)))
   }
 
   async findOne(id: number) {
