@@ -19,7 +19,7 @@ import { GeographicLayerFindAllQuery } from './dto/geographic-layer-filters.dto'
 import { UpdateGeographicLayerDto } from './dto/update-geographic-layer.dto'
 
 @Controller('geographic-layers')
-@ApiTags('Geographic Data Source')
+@ApiTags('Geographic Layer')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 export class GeographicLayerController {

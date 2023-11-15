@@ -19,7 +19,7 @@ import { GeographicMapFindAllQuery } from './dto/geographic-map-filters.dto'
 import { UpdateGeographicMapDto } from './dto/update-geographic-map.dto'
 
 @Controller('geographic-maps')
-@ApiTags('Geographic Data Source')
+@ApiTags('Geographic Map')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 export class GeographicMapController {
