@@ -9,6 +9,7 @@ import { GeographicLayer } from './entities/geographic-layer.entity'
 import { GeographicLayerFindAllQuery } from './dto/geographic-layer-filters.dto'
 import { HttpService } from '@nestjs/axios'
 import { GeographicDataSourceCredentials } from '../geographic-data-source/entities/geographic-data-source.entity'
+import { lastValueFrom, map } from 'rxjs'
 
 @Injectable()
 export class GeographicLayerService {
@@ -25,8 +26,8 @@ export class GeographicLayerService {
     return newGeographicLayer
   }
 
-  fetchGeoJSON(endpoint: string, params: string, credentials: GeographicDataSourceCredentials) {
-    return this.httpService.get(endpoint + "?" + params, { auth: credentials })
+  async fetchGeoJSON(endpoint: string, params: string, credentials: GeographicDataSourceCredentials) {
+    return await lastValueFrom(this.httpService.get(endpoint + "?" + params, { auth: credentials }).pipe(map(r => r.data)))
   }
 
   async findOne(id: number) {
@@ -34,7 +35,7 @@ export class GeographicLayerService {
       await this.geographicLayerRepository.findOne({ id }, { populate: ["source"] })
     const { sourceUrl, credentials } = layer.source
 
-    return { ...layer, data: this.fetchGeoJSON(sourceUrl, layer.params, credentials) }
+    return { ...layer, data: await this.fetchGeoJSON(sourceUrl, layer.params, credentials) }
   }
 
   async findAll(query: GeographicLayerFindAllQuery): Promise<PaginationResponse<GeographicLayer>> {
@@ -48,6 +49,7 @@ export class GeographicLayerService {
 
   async update(id: number, updatedGeographicLayer: UpdateGeographicLayerDto): Promise<GeographicLayer> {
     const existingGeographicLayer = await this.findOne(id)
+
     wrap(existingGeographicLayer).assign(updatedGeographicLayer)
 
     await this.geographicLayerRepository.persistAndFlush(existingGeographicLayer)
