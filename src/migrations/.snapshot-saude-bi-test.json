@@ -619,8 +619,8 @@
           "nullable": false,
           "mappedType": "integer"
         },
-        "endpoint": {
-          "name": "endpoint",
+        "params": {
+          "name": "params",
           "type": "varchar(255)",
           "unsigned": false,
           "autoincrement": false,

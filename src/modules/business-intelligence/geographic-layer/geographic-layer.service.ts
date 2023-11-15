@@ -7,12 +7,15 @@ import { CreateGeographicLayerDto } from './dto/create-geographic-layer.dto'
 import { UpdateGeographicLayerDto } from './dto/update-geographic-layer.dto'
 import { GeographicLayer } from './entities/geographic-layer.entity'
 import { GeographicLayerFindAllQuery } from './dto/geographic-layer-filters.dto'
+import { HttpService } from '@nestjs/axios'
+import { GeographicDataSourceCredentials } from '../geographic-data-source/entities/geographic-data-source.entity'
 
 @Injectable()
 export class GeographicLayerService {
   constructor(
     @InjectRepository(GeographicLayer)
     private readonly geographicLayerRepository: EntityRepository<GeographicLayer>,
+    private readonly httpService: HttpService
   ) {}
 
   async create(geographicLayer: CreateGeographicLayerDto): Promise<GeographicLayer> {
@@ -22,8 +25,16 @@ export class GeographicLayerService {
     return newGeographicLayer
   }
 
+  fetchGeoJSON(endpoint: string, params: string, credentials: GeographicDataSourceCredentials) {
+    return this.httpService.get(endpoint + "?" + params, { auth: credentials })
+  }
+
   async findOne(id: number) {
-    return await this.geographicLayerRepository.findOne({ id }, {})
+    const layer =
+      await this.geographicLayerRepository.findOne({ id }, {})
+    const { sourceUrl, credentials } = layer.source
+
+    return { ...layer, data: this.fetchGeoJSON(sourceUrl, layer.params, credentials) }
   }
 
   async findAll(query: GeographicLayerFindAllQuery): Promise<PaginationResponse<GeographicLayer>> {

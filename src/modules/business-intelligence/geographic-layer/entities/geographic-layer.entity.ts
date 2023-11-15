@@ -8,7 +8,7 @@ export class GeographicLayer extends AuditedEntity {
   source: GeographicDataSource
 
   @Property()
-  endpoint: string
+  params: string
 
   @Property()
   name: string

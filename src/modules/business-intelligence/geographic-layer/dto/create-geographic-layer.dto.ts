@@ -5,7 +5,7 @@ export class CreateGeographicLayerDto {
   source: number
 
   @IsString()
-  endpoint: string
+  params: string
 
   @IsString()
   name: string
