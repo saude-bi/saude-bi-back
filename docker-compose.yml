@@ -1,3 +1,9 @@
+version: '3.9'
+
+volumes:
+  geoserver-data:
+  geo-db-data:
+
 services:
   api:
     build:
@@ -47,3 +53,37 @@ services:
       - '5050:80'
     depends_on:
       - postgres
+
+  geoserver-db:
+    image: kartoza/postgis:16-3.4
+    volumes:
+      - geo-db-data:/var/lib/postgresql
+    ports:
+      - 5433:5432
+    environment:
+      - POSTGRES_DB=${POSTGRES_GEO_DB}
+      - POSTGRES_USER=${POSTGRES_GEO_USER}
+      - POSTGRES_PASS=${POSTGRES_GEO_PASS}
+      - FORCE_SSL=TRUE
+    restart: on-failure
+    healthcheck:
+      test: "PGPASSWORD=${POSTGRES_GEO_PASS} pg_isready -h 127.0.0.1 -U ${POSTGRES_GEO_USER} -d ${POSTGRES_GEO_DB}"
+
+  geoserver:
+    image: kartoza/geoserver:2.24.0
+    volumes:
+      - geoserver-data:/opt/geoserver/data_dir
+    ports:
+      - 8080:8080
+    restart: on-failure
+    environment:
+      - GEOSERVER_ADMIN_PASSWORD=${GEOSERVER_ADMIN_USER}
+      - GEOSERVER_ADMIN_USER=${GEOSERVER_ADMIN_PASSWORD}
+    depends_on:
+      geoserver-db:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent --write-out 'HTTP CODE : %{http_code}\n' --output /dev/null -u ${GEOSERVER_ADMIN_USER}:'${GEOSERVER_ADMIN_PASSWORD}' http://localhost:8080/geoserver/rest/about/version.xml"
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
