@@ -1,4 +1,5 @@
-import { IsNumber, IsString, IsUrl } from 'class-validator'
+import { IsNumber, IsObject, IsString, IsUrl } from 'class-validator'
+import { GeographicDataSourceCredentials } from '../entities/geographic-data-source.entity'
 
 export class CreateGeographicDataSourceDto {
   @IsNumber()
@@ -10,4 +11,7 @@ export class CreateGeographicDataSourceDto {
 
   @IsString()
   name: string
+
+  @IsObject()
+  credentials: GeographicDataSourceCredentials
 }

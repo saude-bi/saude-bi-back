@@ -6,7 +6,10 @@ import { GeographicMap } from '@modules/business-intelligence/geographic-map/ent
 
 @Embeddable()
 export class GeographicDataSourceCredentials {
+  @Property()
   username: string
+
+  @Property()
   password: string
 }
 
