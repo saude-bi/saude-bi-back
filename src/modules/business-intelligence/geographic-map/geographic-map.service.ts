@@ -45,7 +45,7 @@ export class GeographicMapService {
   }
 
   async findOne(id: number) {
-    return await this.em.findOne(GeographicMap, { id }, { populate: ['category'] })
+    return await this.em.findOne(GeographicMap, { id }, { populate: ['category', 'layers'] })
   }
 
   async findAll(query: GeographicMapFindAllQuery, authenticatedUser?: User): Promise<PaginationResponse<GeographicMap>> {
