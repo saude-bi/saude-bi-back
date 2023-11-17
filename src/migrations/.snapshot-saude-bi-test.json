@@ -766,6 +766,71 @@
     },
     {
       "columns": {
+        "geographic_map_id": {
+          "name": "geographic_map_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "establishment_id": {
+          "name": "establishment_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        }
+      },
+      "name": "geographic_map_establishments_with_access",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "geographic_map_establishments_with_access_pkey",
+          "columnNames": [
+            "geographic_map_id",
+            "establishment_id"
+          ],
+          "composite": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "geographic_map_establishments_with_access_geograp_c4c68_foreign": {
+          "constraintName": "geographic_map_establishments_with_access_geograp_c4c68_foreign",
+          "columnNames": [
+            "geographic_map_id"
+          ],
+          "localTableName": "public.geographic_map_establishments_with_access",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.geographic_map",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        },
+        "geographic_map_establishments_with_access_establi_57aca_foreign": {
+          "constraintName": "geographic_map_establishments_with_access_establi_57aca_foreign",
+          "columnNames": [
+            "establishment_id"
+          ],
+          "localTableName": "public.geographic_map_establishments_with_access",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.establishment",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
         "geographic_data_source_id": {
           "name": "geographic_data_source_id",
           "type": "int",

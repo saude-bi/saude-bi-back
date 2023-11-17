@@ -17,6 +17,8 @@ import { GeographicMapService } from './geographic-map.service'
 import { CreateGeographicMapDto } from './dto/create-geographic-map.dto'
 import { GeographicMapFindAllQuery } from './dto/geographic-map-filters.dto'
 import { UpdateGeographicMapDto } from './dto/update-geographic-map.dto'
+import { AuthUser } from '@modules/identity/auth/decorators/auth-user.decorator'
+import { User } from '@modules/identity/user/entities/user.entity'
 
 @Controller('geographic-maps')
 @ApiTags('Geographic Map')
@@ -31,8 +33,8 @@ export class GeographicMapController {
   }
 
   @Get()
-  findAll(@Query() query: GeographicMapFindAllQuery) {
-    return this.geographicMapService.findAll(query)
+  findAll(@Query() query: GeographicMapFindAllQuery, @AuthUser() currentUser: User) {
+    return this.geographicMapService.findAll(query, currentUser)
   }
 
   @Get(':id')
