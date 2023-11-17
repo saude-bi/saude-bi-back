@@ -849,8 +849,8 @@
     },
     {
       "columns": {
-        "geographic_data_source_id": {
-          "name": "geographic_data_source_id",
+        "geographic_layer_id": {
+          "name": "geographic_layer_id",
           "type": "int",
           "unsigned": false,
           "autoincrement": false,
@@ -868,13 +868,13 @@
           "mappedType": "integer"
         }
       },
-      "name": "geographic_data_source_used_in",
+      "name": "geographic_layer_used_in",
       "schema": "public",
       "indexes": [
         {
-          "keyName": "geographic_data_source_used_in_pkey",
+          "keyName": "geographic_layer_used_in_pkey",
           "columnNames": [
-            "geographic_data_source_id",
+            "geographic_layer_id",
             "geographic_map_id"
           ],
           "composite": true,
@@ -884,25 +884,25 @@
       ],
       "checks": [],
       "foreignKeys": {
-        "geographic_data_source_used_in_geographic_data_source_id_foreign": {
-          "constraintName": "geographic_data_source_used_in_geographic_data_source_id_foreign",
+        "geographic_layer_used_in_geographic_layer_id_foreign": {
+          "constraintName": "geographic_layer_used_in_geographic_layer_id_foreign",
           "columnNames": [
-            "geographic_data_source_id"
+            "geographic_layer_id"
           ],
-          "localTableName": "public.geographic_data_source_used_in",
+          "localTableName": "public.geographic_layer_used_in",
           "referencedColumnNames": [
             "id"
           ],
-          "referencedTableName": "public.geographic_data_source",
+          "referencedTableName": "public.geographic_layer",
           "deleteRule": "cascade",
           "updateRule": "cascade"
         },
-        "geographic_data_source_used_in_geographic_map_id_foreign": {
-          "constraintName": "geographic_data_source_used_in_geographic_map_id_foreign",
+        "geographic_layer_used_in_geographic_map_id_foreign": {
+          "constraintName": "geographic_layer_used_in_geographic_map_id_foreign",
           "columnNames": [
             "geographic_map_id"
           ],
-          "localTableName": "public.geographic_data_source_used_in",
+          "localTableName": "public.geographic_layer_used_in",
           "referencedColumnNames": [
             "id"
           ],
