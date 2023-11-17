@@ -17,4 +17,7 @@ export class GeographicMap extends AuditedEntity {
 
   @Property()
   name: string
+
+  @Property()
+  public: boolean
 }

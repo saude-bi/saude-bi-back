@@ -23,4 +23,7 @@ export class Dashboard extends AuditedEntity {
 
   @Property()
   name: string
+
+  @Property()
+  public: boolean
 }

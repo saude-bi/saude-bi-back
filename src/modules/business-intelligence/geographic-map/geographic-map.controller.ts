@@ -10,7 +10,8 @@ import {
   ParseIntPipe,
   Query,
   NotFoundException,
-  UseGuards
+  UseGuards,
+  ForbiddenException
 } from '@nestjs/common'
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { GeographicMapService } from './geographic-map.service'
@@ -38,14 +39,23 @@ export class GeographicMapController {
   }
 
   @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number) {
+  async findOne(@Param('id', ParseIntPipe) id: number, @AuthUser() currentUser: User) {
     const geographicMap = await this.geographicMapService.findOne(id)
 
     if (!geographicMap) {
       throw new NotFoundException()
     }
 
-    return { ...geographicMap }
+    if (!currentUser.isAdmin && !geographicMap.public) {
+      const workRelation = geographicMap.establishmentsWithAccess.matching({ where: { workRelations: { worker: currentUser.medicalWorker } } })
+
+      if (!workRelation) {
+        throw new ForbiddenException()
+      }
+
+    }
+
+    return geographicMap
   }
 
   @Patch(':id')

@@ -58,6 +58,10 @@ export class GeographicMapService {
           }
         }
       }
+    } else if (!authenticatedUser) {
+      whereQuery = {
+        public: true
+      }
     }
 
     if (query.category) {

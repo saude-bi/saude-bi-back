@@ -211,6 +211,15 @@
           "primary": false,
           "nullable": false,
           "mappedType": "string"
+        },
+        "public": {
+          "name": "public",
+          "type": "boolean",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "boolean"
         }
       },
       "name": "dashboard",
@@ -733,6 +742,15 @@
           "primary": false,
           "nullable": false,
           "mappedType": "string"
+        },
+        "public": {
+          "name": "public",
+          "type": "boolean",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "boolean"
         }
       },
       "name": "geographic_map",

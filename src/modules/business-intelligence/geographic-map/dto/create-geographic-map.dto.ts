@@ -1,4 +1,4 @@
-import { IsArray, IsNumber, IsString } from 'class-validator'
+import { IsArray, IsBoolean, IsNumber, IsString } from 'class-validator'
 
 export class CreateGeographicMapDto {
   @IsNumber()
@@ -12,4 +12,7 @@ export class CreateGeographicMapDto {
 
   @IsString()
   name: string
+
+  @IsBoolean()
+  public: boolean
 }

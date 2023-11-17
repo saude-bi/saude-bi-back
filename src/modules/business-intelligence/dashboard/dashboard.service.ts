@@ -87,6 +87,10 @@ export class DashboardService {
           }
         }
       }
+    } else if (!authenticatedUser) {
+      whereQuery = {
+        public: true
+      }
     }
 
     if (query.category) {
