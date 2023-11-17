@@ -1,7 +1,6 @@
 import { PaginationResponse } from '@libs/types/pagination'
 import { getPaginationOptions } from '@libs/utils/pagination.utils'
-import { EntityRepository, wrap } from '@mikro-orm/core'
-import { InjectRepository } from '@mikro-orm/nestjs'
+import { EntityManager, wrap } from '@mikro-orm/core'
 import { Injectable } from '@nestjs/common'
 import { CreateDataSourceDto } from './dto/create-data-source.dto'
 import { UpdateDataSourceDto } from './dto/update-data-source.dto'
@@ -11,23 +10,22 @@ import { DataSourceFindAllQuery } from './dto/data-source-filters.dto'
 @Injectable()
 export class DataSourceService {
   constructor(
-    @InjectRepository(DashboardDataSource)
-    private readonly dashboardDataSourceRepository: EntityRepository<DashboardDataSource>
+    private readonly em: EntityManager
   ) {}
 
   async create(dataSource: CreateDataSourceDto): Promise<DataSource> {
-    const newDataSource = this.dashboardDataSourceRepository.create(dataSource)
-    await this.dashboardDataSourceRepository.persistAndFlush(newDataSource)
+    const newDataSource = this.em.create(DashboardDataSource, dataSource)
+    await this.em.persistAndFlush(newDataSource)
 
     return newDataSource
   }
 
   async findOne(id: number): Promise<DataSource> {
-    return await this.dashboardDataSourceRepository.findOne({ id })
+    return await this.em.findOne(DashboardDataSource, { id })
   }
 
   async findAll(query: DataSourceFindAllQuery): Promise<PaginationResponse<DataSource>> {
-    const [result, total] = await this.dashboardDataSourceRepository.findAndCount(
+    const [result, total] = await this.em.findAndCount(DashboardDataSource,
       { name: new RegExp(query.name, 'i') },
       getPaginationOptions(query)
     )
@@ -39,13 +37,13 @@ export class DataSourceService {
     const existingDataSource = await this.findOne(id)
     wrap(existingDataSource).assign(updatedDataSource)
 
-    await this.dashboardDataSourceRepository.persistAndFlush(existingDataSource)
+    await this.em.persistAndFlush(existingDataSource)
     return existingDataSource
   }
 
   async remove(id: number): Promise<boolean> {
     const dataSource = await this.findOne(id)
-    await this.dashboardDataSourceRepository.removeAndFlush(dataSource)
+    await this.em.removeAndFlush(dataSource)
 
     return !!dataSource
   }

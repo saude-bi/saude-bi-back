@@ -1,14 +1,13 @@
 import { PaginationResponse } from '@libs/types/pagination'
 import { getPaginationOptions } from '@libs/utils/pagination.utils'
-import { EntityRepository, wrap } from '@mikro-orm/core'
-import { InjectRepository } from '@mikro-orm/nestjs'
-import { DashboardCategoryService } from '@modules/business-intelligence/dashboard-category/dashboard-category.service'
-import { DataSourceService } from '@modules/business-intelligence/data-source/data-source.service'
-import { EstablishmentService } from '@modules/health/establishment/services/establishment.service'
+import { EntityManager, wrap } from '@mikro-orm/core'
+import { Establishment } from '@modules/health/establishment/entities/establishment.entity'
 import { MedicalWorker } from '@modules/health/medical-worker/entities/medical-worker.entity'
 import { User } from '@modules/identity/user/entities/user.entity'
 import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
+import { DashboardCategory } from '../dashboard-category/entities/dashboard-category.entity'
+import { DashboardDataSource } from '../data-source/entities/data-source.entity'
 import { CreateDashboardDto } from './dto/create-dashboard.dto'
 import { DashboardFindAllQuery } from './dto/dashboard-filters.dto'
 import { UpdateDashboardDto } from './dto/update-dashboard.dto'
@@ -17,40 +16,36 @@ import { Dashboard } from './entities/dashboard.entity'
 @Injectable()
 export class DashboardService {
   constructor(
-    @InjectRepository(Dashboard)
-    private readonly dashboardRepository: EntityRepository<Dashboard>,
-    private readonly establishmentService: EstablishmentService,
-    private readonly dataSourceService: DataSourceService,
-    private readonly dashboardCategoryService: DashboardCategoryService,
+    private readonly em: EntityManager,
     private readonly jwtService: JwtService
   ) {}
 
   async create(dashboard: CreateDashboardDto): Promise<Dashboard> {
     for (const establishmentId of dashboard.establishmentsWithAccess) {
-      const establishment = await this.establishmentService.findOne(establishmentId)
+      const establishment = await this.em.findOne(Establishment, establishmentId)
       if (!establishment) {
         throw new BadRequestException(`Could not find establishment with id ${establishmentId}`)
       }
     }
 
-    const dataSource = await this.dataSourceService.findOne(dashboard.dataSource)
+    const dataSource = await this.em.findOne(DashboardDataSource, dashboard.dataSource)
     if (!dataSource) {
       throw new BadRequestException(`Could not find data source with id ${dashboard.dataSource}`)
     }
 
-    const category = await this.dashboardCategoryService.findOne(dashboard.category)
+    const category = await this.em.findOne(DashboardCategory, dashboard.category)
     if (!category) {
       throw new BadRequestException(`Could not find category with id ${dashboard.category}`)
     }
 
-    const newDashboard = this.dashboardRepository.create(dashboard)
-    await this.dashboardRepository.persistAndFlush(newDashboard)
+    const newDashboard = this.em.create(Dashboard, dashboard)
+    await this.em.persistAndFlush(newDashboard)
 
     return newDashboard
   }
 
   async findOne(id: number) {
-    return await this.dashboardRepository.findOne(
+    return await this.em.findOne(Dashboard,
       { id },
       { populate: ['dataSource', 'establishmentsWithAccess'] }
     )
@@ -98,7 +93,7 @@ export class DashboardService {
       whereQuery = { ...whereQuery, category: query.category }
     }
 
-    const [result, total] = await this.dashboardRepository.findAndCount(
+    const [result, total] = await this.em.findAndCount(Dashboard,
       { ...whereQuery, name: new RegExp(query.name, 'i') },
       {
         ...getPaginationOptions(query),
@@ -113,13 +108,13 @@ export class DashboardService {
     const existingDashboard = await this.findOne(id)
     wrap(existingDashboard).assign(updatedDashboard)
 
-    await this.dashboardRepository.persistAndFlush(existingDashboard)
+    await this.em.persistAndFlush(existingDashboard)
     return existingDashboard
   }
 
   async remove(id: number): Promise<boolean> {
     const dashboard = await this.findOne(id)
-    await this.dashboardRepository.removeAndFlush(dashboard)
+    await this.em.removeAndFlush(dashboard)
 
     return !!dashboard
   }
