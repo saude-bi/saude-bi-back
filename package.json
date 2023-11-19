@@ -10,7 +10,7 @@
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "prettier": "prettier ./ --check --cache",
+    "prettier": "prettier \"src/**/*.ts\" \"test/**/*.ts\" --check --cache",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
