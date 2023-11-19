@@ -8,6 +8,14 @@ import { GeographicLayerModule } from './geographic-layer/geographic-layer.modul
 import { GeographicMapModule } from './geographic-map/geographic-map.module'
 
 @Module({
-  imports: [DataModule, DataSourceModule, DashboardCategoryModule, DashboardModule, GeographicDataSourceModule, GeographicLayerModule, GeographicMapModule]
+  imports: [
+    DataModule,
+    DataSourceModule,
+    DashboardCategoryModule,
+    DashboardModule,
+    GeographicDataSourceModule,
+    GeographicLayerModule,
+    GeographicMapModule
+  ]
 })
 export class BusinessIntelligenceModule {}

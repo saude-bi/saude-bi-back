@@ -9,9 +9,7 @@ import { DashboardCategoryFindAllQuery } from './dto/dashboard-category-filter.d
 
 @Injectable()
 export class DashboardCategoryService {
-  constructor(
-    private readonly em: EntityManager
-  ) {}
+  constructor(private readonly em: EntityManager) {}
 
   async create(dashboardCategory: CreateDashboardCategoryDto): Promise<DashboardCategory> {
     const newDashboardCategory = this.em.create(DashboardCategory, dashboardCategory)
@@ -27,7 +25,8 @@ export class DashboardCategoryService {
   async findAll(
     query: DashboardCategoryFindAllQuery
   ): Promise<PaginationResponse<DashboardCategory>> {
-    const [result, total] = await this.em.findAndCount(DashboardCategory,
+    const [result, total] = await this.em.findAndCount(
+      DashboardCategory,
       { name: new RegExp(query.name, 'i') },
       getPaginationOptions(query)
     )

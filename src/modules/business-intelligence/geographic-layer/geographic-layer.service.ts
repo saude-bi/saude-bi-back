@@ -27,30 +27,46 @@ export class GeographicLayerService {
   }
 
   async fetchGeoJSON(layerId: number, worker: MedicalWorker, workRelationId: number) {
-    const { params, establishmentPropertyName, source: { sourceUrl, credentials } } = await this.findOne(layerId)
+    const {
+      params,
+      establishmentPropertyName,
+      source: { sourceUrl, credentials }
+    } = await this.findOne(layerId)
     const workRelation = (await worker.workRelations.matching({ where: { id: workRelationId } }))[0]
 
     if (!workRelation) {
       throw new ForbiddenException()
     }
 
-    return await lastValueFrom(this.httpService.get(sourceUrl + params + establishmentPropertyName ? `&{establishmentPropertyName}={workRelation.establishment.name}` : "", { auth: credentials }).pipe(map(r => r.data)))
+    return await lastValueFrom(
+      this.httpService
+        .get(
+          sourceUrl + params + establishmentPropertyName
+            ? `&{establishmentPropertyName}={workRelation.establishment.name}`
+            : '',
+          { auth: credentials }
+        )
+        .pipe(map((r) => r.data))
+    )
   }
 
   async findOne(id: number) {
-    return await this.geographicLayerRepository.findOne({ id }, { populate: ["source"] })
+    return await this.geographicLayerRepository.findOne({ id }, { populate: ['source'] })
   }
 
   async findAll(query: GeographicLayerFindAllQuery): Promise<PaginationResponse<GeographicLayer>> {
     const [result, total] = await this.geographicLayerRepository.findAndCount(
       { name: new RegExp(query.name, 'i') },
-      getPaginationOptions(query),
+      getPaginationOptions(query)
     )
 
     return new PaginationResponse(query, total, result)
   }
 
-  async update(id: number, updatedGeographicLayer: UpdateGeographicLayerDto): Promise<GeographicLayer> {
+  async update(
+    id: number,
+    updatedGeographicLayer: UpdateGeographicLayerDto
+  ): Promise<GeographicLayer> {
     const existingGeographicLayer = await this.findOne(id)
 
     wrap(existingGeographicLayer).assign(updatedGeographicLayer)

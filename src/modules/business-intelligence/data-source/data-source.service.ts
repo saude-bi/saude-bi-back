@@ -9,9 +9,7 @@ import { DataSourceFindAllQuery } from './dto/data-source-filters.dto'
 
 @Injectable()
 export class DataSourceService {
-  constructor(
-    private readonly em: EntityManager
-  ) {}
+  constructor(private readonly em: EntityManager) {}
 
   async create(dataSource: CreateDataSourceDto): Promise<DataSource> {
     const newDataSource = this.em.create(DashboardDataSource, dataSource)
@@ -25,7 +23,8 @@ export class DataSourceService {
   }
 
   async findAll(query: DataSourceFindAllQuery): Promise<PaginationResponse<DataSource>> {
-    const [result, total] = await this.em.findAndCount(DashboardDataSource,
+    const [result, total] = await this.em.findAndCount(
+      DashboardDataSource,
       { name: new RegExp(query.name, 'i') },
       getPaginationOptions(query)
     )

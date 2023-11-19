@@ -47,12 +47,13 @@ export class GeographicMapController {
     }
 
     if (!currentUser.isAdmin && !geographicMap.public) {
-      const workRelation = geographicMap.establishmentsWithAccess.matching({ where: { workRelations: { worker: currentUser.medicalWorker } } })
+      const workRelation = geographicMap.establishmentsWithAccess.matching({
+        where: { workRelations: { worker: currentUser.medicalWorker } }
+      })
 
       if (!workRelation) {
         throw new ForbiddenException()
       }
-
     }
 
     return geographicMap

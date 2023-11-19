@@ -50,12 +50,20 @@ export class GeographicLayerController {
   }
 
   @Get(':id/data')
-  async getData(@Param('id', ParseIntPipe) id: number, @Query() getDataQuery: GetDataQuery, @AuthUser() currentUser: User) {
+  async getData(
+    @Param('id', ParseIntPipe) id: number,
+    @Query() getDataQuery: GetDataQuery,
+    @AuthUser() currentUser: User
+  ) {
     if (!currentUser.medicalWorker) {
       throw new ForbiddenException()
     }
 
-    return await this.geographicLayerService.fetchGeoJSON(id, currentUser.medicalWorker, getDataQuery.workRelation)
+    return await this.geographicLayerService.fetchGeoJSON(
+      id,
+      currentUser.medicalWorker,
+      getDataQuery.workRelation
+    )
   }
 
   @Patch(':id')

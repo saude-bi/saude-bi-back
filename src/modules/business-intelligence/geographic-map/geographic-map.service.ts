@@ -48,7 +48,10 @@ export class GeographicMapService {
     return await this.em.findOne(GeographicMap, { id }, { populate: ['category', 'layers'] })
   }
 
-  async findAll(query: GeographicMapFindAllQuery, authenticatedUser?: User): Promise<PaginationResponse<GeographicMap>> {
+  async findAll(
+    query: GeographicMapFindAllQuery,
+    authenticatedUser?: User
+  ): Promise<PaginationResponse<GeographicMap>> {
     let whereQuery = undefined
     if (authenticatedUser && !authenticatedUser.isAdmin) {
       whereQuery = {
@@ -68,7 +71,8 @@ export class GeographicMapService {
       whereQuery = { ...whereQuery, category: query.category }
     }
 
-    const [result, total] = await this.em.findAndCount(GeographicMap,
+    const [result, total] = await this.em.findAndCount(
+      GeographicMap,
       { ...whereQuery, name: new RegExp(query.name, 'i') },
       {
         ...getPaginationOptions(query),

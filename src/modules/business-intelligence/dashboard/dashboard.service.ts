@@ -15,10 +15,7 @@ import { Dashboard } from './entities/dashboard.entity'
 
 @Injectable()
 export class DashboardService {
-  constructor(
-    private readonly em: EntityManager,
-    private readonly jwtService: JwtService
-  ) {}
+  constructor(private readonly em: EntityManager, private readonly jwtService: JwtService) {}
 
   async create(dashboard: CreateDashboardDto): Promise<Dashboard> {
     for (const establishmentId of dashboard.establishmentsWithAccess) {
@@ -45,7 +42,8 @@ export class DashboardService {
   }
 
   async findOne(id: number) {
-    return await this.em.findOne(Dashboard,
+    return await this.em.findOne(
+      Dashboard,
       { id },
       { populate: ['dataSource', 'establishmentsWithAccess'] }
     )
@@ -97,7 +95,8 @@ export class DashboardService {
       whereQuery = { ...whereQuery, category: query.category }
     }
 
-    const [result, total] = await this.em.findAndCount(Dashboard,
+    const [result, total] = await this.em.findAndCount(
+      Dashboard,
       { ...whereQuery, name: new RegExp(query.name, 'i') },
       {
         ...getPaginationOptions(query),

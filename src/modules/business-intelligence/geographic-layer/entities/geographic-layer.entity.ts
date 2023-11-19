@@ -8,7 +8,7 @@ export class GeographicLayer extends AuditedEntity {
   @ManyToOne(() => GeographicDataSource)
   source: GeographicDataSource
 
-  @ManyToMany(() => GeographicMap, "layers", { owner: true })
+  @ManyToMany(() => GeographicMap, 'layers', { owner: true })
   usedIn = new Collection<GeographicMap>(this)
 
   @Property()
