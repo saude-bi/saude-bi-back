@@ -15,5 +15,8 @@ export class GeographicLayer extends AuditedEntity {
   params: string
 
   @Property()
+  establishmentPropertyName?: string
+
+  @Property()
   name: string
 }

@@ -2,14 +2,14 @@ import { PaginationResponse } from '@libs/types/pagination'
 import { getPaginationOptions } from '@libs/utils/pagination.utils'
 import { EntityRepository, wrap } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
-import { Injectable } from '@nestjs/common'
+import { ForbiddenException, Injectable } from '@nestjs/common'
 import { CreateGeographicLayerDto } from './dto/create-geographic-layer.dto'
 import { UpdateGeographicLayerDto } from './dto/update-geographic-layer.dto'
 import { GeographicLayer } from './entities/geographic-layer.entity'
 import { GeographicLayerFindAllQuery } from './dto/geographic-layer-filters.dto'
 import { HttpService } from '@nestjs/axios'
-import { GeographicDataSourceCredentials } from '../geographic-data-source/entities/geographic-data-source.entity'
 import { lastValueFrom, map } from 'rxjs'
+import { MedicalWorker } from '@modules/health/medical-worker/entities/medical-worker.entity'
 
 @Injectable()
 export class GeographicLayerService {
@@ -26,8 +26,15 @@ export class GeographicLayerService {
     return newGeographicLayer
   }
 
-  async fetchGeoJSON(endpoint: string, params: string, credentials: GeographicDataSourceCredentials) {
-    return await lastValueFrom(this.httpService.get(endpoint + params, { auth: credentials }).pipe(map(r => r.data)))
+  async fetchGeoJSON(layerId: number, worker: MedicalWorker, workRelationId: number) {
+    const { params, establishmentPropertyName, source: { sourceUrl, credentials } } = await this.findOne(layerId)
+    const workRelation = (await worker.workRelations.matching({ where: { id: workRelationId } }))[0]
+
+    if (!workRelation) {
+      throw new ForbiddenException()
+    }
+
+    return await lastValueFrom(this.httpService.get(sourceUrl + params + establishmentPropertyName ? `&{establishmentPropertyName}={workRelation.establishment.name}` : "", { auth: credentials }).pipe(map(r => r.data)))
   }
 
   async findOne(id: number) {

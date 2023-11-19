@@ -10,13 +10,16 @@ import {
   ParseIntPipe,
   Query,
   NotFoundException,
-  UseGuards
+  UseGuards,
+  ForbiddenException
 } from '@nestjs/common'
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { GeographicLayerService } from './geographic-layer.service'
 import { CreateGeographicLayerDto } from './dto/create-geographic-layer.dto'
-import { GeographicLayerFindAllQuery } from './dto/geographic-layer-filters.dto'
+import { GeographicLayerFindAllQuery, GetDataQuery } from './dto/geographic-layer-filters.dto'
 import { UpdateGeographicLayerDto } from './dto/update-geographic-layer.dto'
+import { AuthUser } from '@modules/identity/auth/decorators/auth-user.decorator'
+import { User } from '@modules/identity/user/entities/user.entity'
 
 @Controller('geographic-layers')
 @ApiTags('Geographic Layer')
@@ -47,11 +50,12 @@ export class GeographicLayerController {
   }
 
   @Get(':id/data')
-  async getData(@Param('id', ParseIntPipe) id: number) {
-    const layer = await this.findOne(id)
-    const { sourceUrl, credentials } = layer.source
+  async getData(@Param('id', ParseIntPipe) id: number, @Query() getDataQuery: GetDataQuery, @AuthUser() currentUser: User) {
+    if (!currentUser.medicalWorker) {
+      throw new ForbiddenException()
+    }
 
-    return await this.geographicLayerService.fetchGeoJSON(sourceUrl, layer.params, credentials)
+    return await this.geographicLayerService.fetchGeoJSON(id, currentUser.medicalWorker, getDataQuery.workRelation)
   }
 
   @Patch(':id')

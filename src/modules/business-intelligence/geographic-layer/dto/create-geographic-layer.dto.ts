@@ -1,4 +1,4 @@
-import { IsNumber, IsString } from 'class-validator'
+import { IsNumber, IsOptional, IsString } from 'class-validator'
 
 export class CreateGeographicLayerDto {
   @IsNumber()
@@ -9,4 +9,8 @@ export class CreateGeographicLayerDto {
 
   @IsString()
   name: string
+
+  @IsString()
+  @IsOptional()
+  establishmentPropertyName?: string
 }
