@@ -22,6 +22,6 @@ export class GeographicDataSource extends AuditedEntity {
   @Property()
   name: string
 
-  @Embedded(() => GeographicDataSourceCredentials)
-  credentials: GeographicDataSourceCredentials
+  @Embedded(() => GeographicDataSourceCredentials, { nullable: true })
+  credentials?: GeographicDataSourceCredentials
 }
