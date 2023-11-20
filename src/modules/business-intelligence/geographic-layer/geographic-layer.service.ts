@@ -42,7 +42,7 @@ export class GeographicLayerService {
       this.httpService
         .get(
           sourceUrl + params + establishmentPropertyName
-            ? `&{establishmentPropertyName}={workRelation.establishment.name}`
+            ? `&${establishmentPropertyName}=${workRelation.establishment.name}`
             : '',
           { auth: credentials }
         )
