@@ -2,8 +2,7 @@ import { PaginationResponse } from '@libs/types/pagination'
 import { getPaginationOptions } from '@libs/utils/pagination.utils'
 import { EntityRepository, wrap } from '@mikro-orm/core'
 import { InjectRepository } from '@mikro-orm/nestjs'
-import { DashboardCategoryService } from '@modules/business-intelligence/dashboard-category/dashboard-category.service'
-import { BadRequestException, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { CreateGeographicDataSourceDto } from './dto/create-geographic-data-source.dto'
 import { UpdateGeographicDataSourceDto } from './dto/update-geographic-data-source.dto'
 import { GeographicDataSource } from './entities/geographic-data-source.entity'
@@ -14,18 +13,9 @@ export class GeographicDataSourceService {
   constructor(
     @InjectRepository(GeographicDataSource)
     private readonly geographicDataSourceRepository: EntityRepository<GeographicDataSource>,
-    private readonly dashboardCategoryService: DashboardCategoryService
   ) {}
 
   async create(geographicDataSource: CreateGeographicDataSourceDto): Promise<GeographicDataSource> {
-    const category = await this.dashboardCategoryService.findOne(geographicDataSource.category)
-
-    if (!category) {
-      throw new BadRequestException(
-        `Could not find category with id ${geographicDataSource.category}`
-      )
-    }
-
     const newGeographicDataSource = this.geographicDataSourceRepository.create(geographicDataSource)
     await this.geographicDataSourceRepository.persistAndFlush(newGeographicDataSource)
 
@@ -33,7 +23,7 @@ export class GeographicDataSourceService {
   }
 
   async findOne(id: number) {
-    return await this.geographicDataSourceRepository.findOne({ id }, { populate: ['category'] })
+    return await this.geographicDataSourceRepository.findOne({ id })
   }
 
   async findAll(
@@ -41,10 +31,8 @@ export class GeographicDataSourceService {
   ): Promise<PaginationResponse<GeographicDataSource>> {
     const [result, total] = await this.geographicDataSourceRepository.findAndCount(
       { name: new RegExp(query.name, 'i') },
-      {
-        ...getPaginationOptions(query),
-        populate: ['category']
-      }
+      getPaginationOptions(query),
+
     )
 
     return new PaginationResponse(query, total, result)

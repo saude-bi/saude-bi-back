@@ -531,15 +531,6 @@
           "length": 6,
           "mappedType": "datetime"
         },
-        "category_id": {
-          "name": "category_id",
-          "type": "int",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "integer"
-        },
         "source_url": {
           "name": "source_url",
           "type": "varchar(255)",
@@ -591,20 +582,7 @@
         }
       ],
       "checks": [],
-      "foreignKeys": {
-        "geographic_data_source_category_id_foreign": {
-          "constraintName": "geographic_data_source_category_id_foreign",
-          "columnNames": [
-            "category_id"
-          ],
-          "localTableName": "public.geographic_data_source",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.dashboard_category",
-          "updateRule": "cascade"
-        }
-      }
+      "foreignKeys": {}
     },
     {
       "columns": {
