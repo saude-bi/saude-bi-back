@@ -59,11 +59,14 @@ export class GeographicLayerController {
       throw new ForbiddenException()
     }
 
-    return await this.geographicLayerService.fetchGeoJSON(
+    return {
       id,
-      currentUser.medicalWorker,
-      getDataQuery.workRelation
-    )
+      data: await this.geographicLayerService.fetchGeoJSON(
+        id,
+        currentUser.medicalWorker,
+        getDataQuery.workRelation
+      )
+    }
   }
 
   @Patch(':id')
