@@ -21,24 +21,26 @@ import { UpdateGeographicLayerDto } from './dto/update-geographic-layer.dto'
 import { AuthUser } from '@modules/identity/auth/decorators/auth-user.decorator'
 import { User } from '@modules/identity/user/entities/user.entity'
 
-@Controller('geographic-layers')
+@Controller()
 @ApiTags('Geographic Layer')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 export class GeographicLayerController {
   constructor(private readonly geographicLayerService: GeographicLayerService) {}
 
-  @Post()
+  @Post('geographic-layers')
+  @UseGuards(JwtAuthGuard)
   create(@Body() createGeographicLayerDto: CreateGeographicLayerDto) {
     return this.geographicLayerService.create(createGeographicLayerDto)
   }
 
-  @Get()
+  @Get('geographic-layers')
+  @UseGuards(JwtAuthGuard)
   findAll(@Query() query: GeographicLayerFindAllQuery) {
     return this.geographicLayerService.findAll(query)
   }
 
-  @Get(':id')
+  @Get('geographic-layers/:id')
+  @UseGuards(JwtAuthGuard)
   async findOne(@Param('id', ParseIntPipe) id: number) {
     const geographicLayer = await this.geographicLayerService.findOne(id)
 
@@ -49,7 +51,8 @@ export class GeographicLayerController {
     return { ...geographicLayer }
   }
 
-  @Get(':id/data')
+  @Get('geographic-layers/:id/data')
+  @UseGuards(JwtAuthGuard)
   async getData(
     @Param('id', ParseIntPipe) id: number,
     @Query() getDataQuery: GetDataQuery,
@@ -69,7 +72,17 @@ export class GeographicLayerController {
     }
   }
 
-  @Patch(':id')
+  @Get('public/geographic-layers/:id/data')
+  async getPublicData(@Param('id', ParseIntPipe) id: number,) {
+    return {
+      id,
+      data: await this.geographicLayerService.fetchPublicGeoJSON(id)
+    }
+  }
+
+
+  @Patch('geographic-layers/:id')
+  @UseGuards(JwtAuthGuard)
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateGeographicLayerDto: UpdateGeographicLayerDto
@@ -83,7 +96,8 @@ export class GeographicLayerController {
     return this.geographicLayerService.update(id, updateGeographicLayerDto)
   }
 
-  @Delete(':id')
+  @Delete('geographic-layers/:id')
+  @UseGuards(JwtAuthGuard)
   async remove(@Param('id', ParseIntPipe) id: number) {
     const geographicLayer = await this.geographicLayerService.findOne(id)
 

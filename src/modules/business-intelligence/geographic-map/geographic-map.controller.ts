@@ -21,24 +21,31 @@ import { UpdateGeographicMapDto } from './dto/update-geographic-map.dto'
 import { AuthUser } from '@modules/identity/auth/decorators/auth-user.decorator'
 import { User } from '@modules/identity/user/entities/user.entity'
 
-@Controller('geographic-maps')
+@Controller()
 @ApiTags('Geographic Map')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 export class GeographicMapController {
   constructor(private readonly geographicMapService: GeographicMapService) {}
 
-  @Post()
+  @Post('geographic-maps')
+  @UseGuards(JwtAuthGuard)
   create(@Body() createGeographicMapDto: CreateGeographicMapDto) {
     return this.geographicMapService.create(createGeographicMapDto)
   }
 
-  @Get()
+  @Get('geographic-maps')
+  @UseGuards(JwtAuthGuard)
   findAll(@Query() query: GeographicMapFindAllQuery, @AuthUser() currentUser: User) {
     return this.geographicMapService.findAll(query, currentUser)
   }
 
-  @Get(':id')
+  @Get('public/geographic-maps')
+  publicFindAll(@Query() query: GeographicMapFindAllQuery) {
+    return this.geographicMapService.findAll(query)
+  }
+
+  @Get('geographic-maps/:id')
+  @UseGuards(JwtAuthGuard)
   async findOne(@Param('id', ParseIntPipe) id: number, @AuthUser() currentUser: User) {
     const geographicMap = await this.geographicMapService.findOne(id)
 
@@ -59,7 +66,8 @@ export class GeographicMapController {
     return geographicMap
   }
 
-  @Patch(':id')
+  @Patch('geographic-maps/:id')
+  @UseGuards(JwtAuthGuard)
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateGeographicMapDto: UpdateGeographicMapDto
@@ -73,7 +81,8 @@ export class GeographicMapController {
     return this.geographicMapService.update(id, updateGeographicMapDto)
   }
 
-  @Delete(':id')
+  @Delete('geographic-maps/:id')
+  @UseGuards(JwtAuthGuard)
   async remove(@Param('id', ParseIntPipe) id: number) {
     const geographicMap = await this.geographicMapService.findOne(id)
 

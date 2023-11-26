@@ -50,6 +50,22 @@ export class GeographicLayerService {
     )
   }
 
+  async fetchPublicGeoJSON(layerId: number) {
+    const {
+      params,
+      source: { sourceUrl, credentials }
+    } = await this.findOne(layerId)
+
+    return await lastValueFrom(
+      this.httpService
+        .get(
+          sourceUrl + params,
+          { auth: credentials }
+        )
+        .pipe(map((r) => r.data))
+    )
+  }
+
   async findOne(id: number) {
     return await this.geographicLayerRepository.findOne({ id }, { populate: ['source'] })
   }

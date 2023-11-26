@@ -23,10 +23,9 @@ import { FindUrlQuery } from './dto/find-url-query.dto'
 import { UpdateDashboardDto } from './dto/update-dashboard.dto'
 import { Dashboard } from './entities/dashboard.entity'
 
-@Controller('dashboards')
+@Controller()
 @ApiTags('Dashboard')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}
 
@@ -41,17 +40,26 @@ export class DashboardController {
     return user.isAdmin || userInRelatedEstablishment
   }
 
-  @Post()
+  @Post('dashboards')
+  @UseGuards(JwtAuthGuard)
   create(@Body() createDashboardDto: CreateDashboardDto) {
     return this.dashboardService.create(createDashboardDto)
   }
 
-  @Get()
+  @Get('dashboards')
+  @UseGuards(JwtAuthGuard)
   findAll(@Query() query: DashboardFindAllQuery, @AuthUser() currentUser: User) {
     return this.dashboardService.findAll(query, currentUser)
   }
 
-  @Get(':id')
+
+  @Get('public/dashboards')
+  findAllPublic(@Query() query: DashboardFindAllQuery) {
+    return this.dashboardService.findAll(query)
+  }
+
+  @Get('dashboards/:id')
+  @UseGuards(JwtAuthGuard)
   async findOne(@Param('id', ParseIntPipe) id: number, @AuthUser() currentUser: User) {
     const dashboard = await this.dashboardService.findOne(id)
 
@@ -66,7 +74,8 @@ export class DashboardController {
     return { ...dashboard }
   }
 
-  @Get(':id/url')
+  @Get('dashboards/:id/url')
+  @UseGuards(JwtAuthGuard)
   async findDashboardUrl(
     @Param('id', ParseIntPipe) id: number,
     @Query() findUrlQuery: FindUrlQuery,
@@ -89,7 +98,23 @@ export class DashboardController {
     )
   }
 
-  @Patch(':id')
+  @Get('public/dashboards/:id/url')
+  async findPublicDashboardUrl(
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    const dashboard = await this.dashboardService.findOne(id)
+
+    if (!dashboard?.public) {
+      throw new NotFoundException()
+    }
+
+    return await this.dashboardService.getPublicEmbedUrl(
+      dashboard,
+    )
+  }
+
+  @Patch('dashboards/:id')
+  @UseGuards(JwtAuthGuard)
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateDashboardDto: UpdateDashboardDto,
@@ -108,7 +133,8 @@ export class DashboardController {
     return this.dashboardService.update(id, updateDashboardDto)
   }
 
-  @Delete(':id')
+  @Delete('dashboards/:id')
+  @UseGuards(JwtAuthGuard)
   async remove(@Param('id', ParseIntPipe) id: number, @AuthUser() currentUser: User) {
     const dashboard = await this.dashboardService.findOne(id)
 

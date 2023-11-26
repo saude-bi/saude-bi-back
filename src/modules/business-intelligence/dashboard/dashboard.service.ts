@@ -49,6 +49,18 @@ export class DashboardService {
     )
   }
 
+  async getPublicEmbedUrl(dashboard: Dashboard) {
+    const dataSource = dashboard.dataSource
+
+    const payload = { resource: { dashboard: dashboard.metabaseId }, }
+    const token = this.jwtService.sign(payload, { secret: dataSource.secret })
+
+    const url =
+      dataSource.url + '/embed/dashboard/' + token + '#theme=transparent&bordered=false&titled=true'
+
+    return { url }
+  }
+
   async getEmbedUrl(dashboard: Dashboard, worker: MedicalWorker, workRelationId: number) {
     const workRelation = (await worker.workRelations.matching({ where: { id: workRelationId } }))[0]
 
