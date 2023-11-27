@@ -52,7 +52,6 @@ export class DashboardController {
     return this.dashboardService.findAll(query, currentUser)
   }
 
-
   @Get('public/dashboards')
   findAllPublic(@Query() query: DashboardFindAllQuery) {
     return this.dashboardService.findAll(query)
@@ -99,18 +98,14 @@ export class DashboardController {
   }
 
   @Get('public/dashboards/:id/url')
-  async findPublicDashboardUrl(
-    @Param('id', ParseIntPipe) id: number,
-  ) {
+  async findPublicDashboardUrl(@Param('id', ParseIntPipe) id: number) {
     const dashboard = await this.dashboardService.findOne(id)
 
     if (!dashboard?.public) {
       throw new NotFoundException()
     }
 
-    return await this.dashboardService.getPublicEmbedUrl(
-      dashboard,
-    )
+    return await this.dashboardService.getPublicEmbedUrl(dashboard)
   }
 
   @Patch('dashboards/:id')

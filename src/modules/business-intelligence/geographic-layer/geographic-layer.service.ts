@@ -30,7 +30,7 @@ export class GeographicLayerService {
     const {
       params,
       establishmentPropertyName,
-      source: { sourceUrl, credentials }
+      source: { sourceUrl }
     } = await this.findOne(layerId)
     const workRelation = (await worker.workRelations.matching({ where: { id: workRelationId } }))[0]
 
@@ -54,17 +54,10 @@ export class GeographicLayerService {
   async fetchPublicGeoJSON(layerId: number) {
     const {
       params,
-      source: { sourceUrl, credentials }
+      source: { sourceUrl }
     } = await this.findOne(layerId)
 
-    return await lastValueFrom(
-      this.httpService
-        .get(
-          sourceUrl + params,
-          { auth: credentials }
-        )
-        .pipe(map((r) => r.data))
-    )
+    return await lastValueFrom(this.httpService.get(sourceUrl + params).pipe(map((r) => r.data)))
   }
 
   async findOne(id: number) {

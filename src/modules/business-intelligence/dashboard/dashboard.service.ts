@@ -52,7 +52,7 @@ export class DashboardService {
   async getPublicEmbedUrl(dashboard: Dashboard) {
     const dataSource = dashboard.dataSource
 
-    const payload = { resource: { dashboard: dashboard.metabaseId }, }
+    const payload = { resource: { dashboard: dashboard.metabaseId } }
     const token = this.jwtService.sign(payload, { secret: dataSource.secret })
 
     const url =

@@ -73,13 +73,12 @@ export class GeographicLayerController {
   }
 
   @Get('public/geographic-layers/:id/data')
-  async getPublicData(@Param('id', ParseIntPipe) id: number,) {
+  async getPublicData(@Param('id', ParseIntPipe) id: number) {
     return {
       id,
       data: await this.geographicLayerService.fetchPublicGeoJSON(id)
     }
   }
-
 
   @Patch('geographic-layers/:id')
   @UseGuards(JwtAuthGuard)
