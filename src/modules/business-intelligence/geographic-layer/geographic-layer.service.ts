@@ -41,10 +41,11 @@ export class GeographicLayerService {
     return await lastValueFrom(
       this.httpService
         .get(
-          sourceUrl + params + (establishmentPropertyName
-            ? `&${establishmentPropertyName}=${workRelation.establishment.name}`
-            : ''),
-          { auth: credentials }
+          sourceUrl +
+            params +
+            (establishmentPropertyName
+              ? `&${establishmentPropertyName}=${workRelation.establishment.name}`
+              : '')
         )
         .pipe(map((r) => r.data))
     )

@@ -12,7 +12,7 @@ import { GeographicDataSourceFindAllQuery } from './dto/geographic-data-source-f
 export class GeographicDataSourceService {
   constructor(
     @InjectRepository(GeographicDataSource)
-    private readonly geographicDataSourceRepository: EntityRepository<GeographicDataSource>,
+    private readonly geographicDataSourceRepository: EntityRepository<GeographicDataSource>
   ) {}
 
   async create(geographicDataSource: CreateGeographicDataSourceDto): Promise<GeographicDataSource> {
@@ -31,8 +31,7 @@ export class GeographicDataSourceService {
   ): Promise<PaginationResponse<GeographicDataSource>> {
     const [result, total] = await this.geographicDataSourceRepository.findAndCount(
       { name: new RegExp(query.name, 'i') },
-      getPaginationOptions(query),
-
+      getPaginationOptions(query)
     )
 
     return new PaginationResponse(query, total, result)
