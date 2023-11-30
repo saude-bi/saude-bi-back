@@ -17,3 +17,7 @@ variable "number_of_instances" {
 variable "ami_key_pair_name" {
         default = "tomcat"
 }
+
+variable "ssh_public_key" {
+        description = "ssh public key"
+}

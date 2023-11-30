@@ -9,5 +9,6 @@ resource "aws_instance" "ec2_instance" {
   key_name = aws_key_pair.deployer.key_name
 }
 resource "aws_key_pair" "deployer" {
-  key_name   = "deployer-key"
+  key_name = "deployer-key"
+  public_key = var.ssh_public_key
 }
