@@ -19,6 +19,9 @@ jobs:
     defaults:
       run:
         working-directory: terraform
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -35,14 +38,31 @@ jobs:
         with:
           terraform_version: "1.6.5"
 
-      - name: Init Terraform
-        id: terraform-init
+      - name: Terraform Format
+        id: fmt
+        run: terraform fmt -check
+        continue-on-error: true
+
+      - name: Terraform Init
+        id: init
         run: terraform init
+        continue-on-error: true
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+        continue-on-error: true
 
       - name: Terraform Plan
-        id: terraform-plan
-        run: terraform plan -no-color
+        id: plan
+        if: github.event_name == 'pull_request'
+        run: terraform plan -no-color -input=false
+        continue-on-error: true
+
+      - name: Terraform Status
+        if: steps.plan.outcome == 'failure' || steps.validate.outcome == 'failure' || steps.init.outcome == 'failure' || steps.fmt.outcome == 'failure'
+        run: exit 1
 
       - name: Terraform Apply
-        id: terraform-apply
-        run: terraform apply -no-color
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        run: terraform apply -auto-approve -input=false
