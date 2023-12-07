@@ -5,5 +5,5 @@ variable "repo_name" {
 
 variable "public_ip" {
   description = "value of public ip"
-  type = string
+  type = list
 }
