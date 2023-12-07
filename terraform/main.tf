@@ -1,14 +1,13 @@
 provider "aws" {
-  region     = "us-east-1"  # Substitua pela sua região
+  region = "us-east-1"  # Substitua pela sua região
 }
 
-resource "aws_instance" "ec2_instance" {
-  ami = data.aws_ami.ubuntu.id
-  count = "${var.number_of_instances}"
-  instance_type = "${var.instance_type}"
-  key_name = aws_key_pair.deployer.key_name
+module "aws_instance" {
+  source = "./modules/aws"
+  ssh_public_key = var.ssh_public_key
 }
-resource "aws_key_pair" "deployer" {
-  key_name = "backend-key-par"
-  public_key = var.ssh_public_key
+
+module "github_environment" {
+  source = "./modules/github"
+  public_ip = module.aws_instance.instance_public_ip
 }
