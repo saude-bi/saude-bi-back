@@ -3,6 +3,7 @@ provider "aws" {
 }
 
 provider "github" {
+  token = var.token
 }
 
 module "aws_instance" {
