@@ -16,7 +16,7 @@ module "aws_instance" {
 
 module "github_environment" {
   source = "./modules/github"
-  public_ip = module.aws_instance.*.instance_public_ip
+  public_ip = one(module.aws_instance[*].instance_public_ip)
 
   providers = {
     github.alias = github.alias
