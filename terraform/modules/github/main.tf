@@ -3,12 +3,14 @@ data "github_repository" "repo" {
 }
 
 resource "github_repository_environment" "backend_env" {
+  provider = github.alias
 
   repository       = data.github_repository.repo.id
   environment      = "deploy-ci"
 }
 
 resource "github_actions_environment_secret" "test_secret" {
+  provider = github.alias
 
   repository       = data.github_repository.repo.id
   environment      = github_repository_environment.backend_env.environment
