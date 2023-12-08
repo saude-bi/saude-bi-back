@@ -14,3 +14,11 @@ module "aws_instance" {
   ssh_public_key = var.ssh_public_key
 }
 
+module "github_environment" {
+  source = "./modules/github"
+  public_ip = module.aws_instance.*.instance_public_ip
+
+  providers = {
+    github.alias = github.alias
+  }
+}
