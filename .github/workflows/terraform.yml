@@ -20,7 +20,7 @@ jobs:
       run:
         working-directory: terraform
     env:
-      GITHUB_OWNER: ${{ github.GITHUB_REPOSITORY_OWNER }}
+      GITHUB_OWNER: saude-bi
     permissions:
       contents: read
       pull-requests: write
