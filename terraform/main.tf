@@ -7,6 +7,7 @@ provider "github" {
 
   token = var.token
   owner = "saude-bi"
+  organization = "saude-bi"
 }
 
 module "aws_instance" {
