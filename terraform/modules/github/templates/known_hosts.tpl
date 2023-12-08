@@ -1,3 +1,3 @@
-%{ for k, v in known_hosts ~}
-${ k } ${v}
+%{ for k in known_hosts ~}
+${ k }
 %{ endfor ~}

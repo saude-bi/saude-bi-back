@@ -3,7 +3,10 @@ provider "aws" {
 }
 
 provider "github" {
+  alias = "alias"
+
   token = var.token
+  owner = "saude-bi"
 }
 
 module "aws_instance" {
@@ -11,7 +14,3 @@ module "aws_instance" {
   ssh_public_key = var.ssh_public_key
 }
 
-module "github_environment" {
-  source = "./modules/github"
-  public_ip = module.aws_instance.*.instance_public_ip
-}
